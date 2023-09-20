@@ -1,6 +1,6 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp;
 
-public class WhileConst implements WhileArithmeticExpression{
+public class WhileConst implements WhileArithmeticExpression {
     private final WhileNumber number;
 
     public WhileConst(String number) {

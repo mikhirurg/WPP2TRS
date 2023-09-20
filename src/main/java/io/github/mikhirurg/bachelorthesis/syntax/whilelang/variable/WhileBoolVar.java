@@ -3,9 +3,16 @@ package io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileBooleanExpression;
 
 public class WhileBoolVar implements WhileVar, WhileBooleanExpression {
+
+    private final String varName;
+
+    public WhileBoolVar(String varName) {
+        this.varName = varName;
+    }
+
     @Override
     public String textRepresentation() {
-        return null;
+        return varName;
     }
 
     @Override
@@ -15,6 +22,6 @@ public class WhileBoolVar implements WhileVar, WhileBooleanExpression {
 
     @Override
     public String getVarName() {
-        return null;
+        return varName;
     }
 }

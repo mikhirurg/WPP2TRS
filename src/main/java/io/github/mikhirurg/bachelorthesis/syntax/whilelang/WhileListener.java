@@ -5,8 +5,9 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileBaseListener;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileParser;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVarType;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.*;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.DuplicateVariableDeclarationException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +19,8 @@ public class WhileListener extends WhileBaseListener {
     private final Stack<WhileArithmeticExpression> arithmeticStack;
 
     private final Stack<WhileBooleanExpression> booleanStack;
+
+    private final Stack<WhileString> stringsStack;
 
     private final Stack<WhileStatement> statementStack;
 
@@ -34,6 +37,7 @@ public class WhileListener extends WhileBaseListener {
         this.booleanStack = new Stack<>();
         this.statementStack = new Stack<>();
         this.variables = new HashMap<>();
+        stringsStack = new Stack<>();
     }
 
     public WhileStatement getProgram() {
@@ -55,6 +59,9 @@ public class WhileListener extends WhileBaseListener {
             WhileStatement s1 = statementStack.pop();
             statementStack.add(new WhileComp(s1, s2));
         } else if (ctx.children.size() == 4 && ctx.children.get(2).getText().equals(":=")) {
+
+            String varName = ctx.children.get(1).getText();
+
             WhileVarType varType = switch (ctx.children.get(0).getText()) {
                 case "bool" -> WhileVarType.BOOL;
                 case "string" -> WhileVarType.STRING;
@@ -62,15 +69,34 @@ public class WhileListener extends WhileBaseListener {
             };
 
             WhileVar variable;
-            switch (varType) {
-                case INT -> {
-
+            if (variables.containsKey(varName)) {
+                throw new DuplicateVariableDeclarationException(variables.get(varName));
+            } else {
+                switch (varType) {
+                    case STRING -> {
+                        variable = new WhileStringVar(varName);
+                        statementStack.add(new WhileVarDeclaration(variable, stringsStack.pop()));
+                    }
+                    case BOOL -> {
+                        variable = new WhileBoolVar(varName);
+                        statementStack.add(new WhileVarDeclaration(variable, booleanStack.pop()));
+                    }
+                    default -> {
+                        variable = new WhileIntVar(varName);
+                        statementStack.add(new WhileVarDeclaration(variable, arithmeticStack.pop()));
+                    }
                 }
+
+                variables.put(varName, variable);
+            }
+        } else if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals(":=")) {
+
+            String varName = ctx.children.get(0).getText();
+
+            if (variables.containsKey(varName)) {
+
             }
 
-
-
-        } else if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals(":=")) {
             WhileArithmeticExpression expression = arithmeticStack.pop();
 
             WhileVar var;
@@ -154,5 +180,10 @@ public class WhileListener extends WhileBaseListener {
             WhileBooleanExpression left = booleanStack.pop();
             booleanStack.add(new WhileAnd(left, right));
         }
+    }
+
+    @Override
+    public void exitStrexp(WhileParser.StrexpContext ctx) {
+        super.exitStrexp(ctx);
     }
 }
