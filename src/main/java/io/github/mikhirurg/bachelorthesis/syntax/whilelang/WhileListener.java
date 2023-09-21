@@ -6,8 +6,11 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileBaseListener
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileParser;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileStringExpression;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.DuplicateVariableDeclarationException;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.IncompatibleTypeException;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.VariableNotDeclaredException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -73,15 +76,16 @@ public class WhileListener extends WhileBaseListener {
                 throw new DuplicateVariableDeclarationException(variables.get(varName));
             } else {
                 switch (varType) {
-                    case STRING -> {
+                    case STRING: {
                         variable = new WhileStringVar(varName);
                         statementStack.add(new WhileVarDeclaration(variable, stringsStack.pop()));
                     }
-                    case BOOL -> {
+                    case BOOL: {
                         variable = new WhileBoolVar(varName);
                         statementStack.add(new WhileVarDeclaration(variable, booleanStack.pop()));
                     }
-                    default -> {
+                    case INT:
+                    default: {
                         variable = new WhileIntVar(varName);
                         statementStack.add(new WhileVarDeclaration(variable, arithmeticStack.pop()));
                     }
@@ -94,19 +98,25 @@ public class WhileListener extends WhileBaseListener {
             String varName = ctx.children.get(0).getText();
 
             if (variables.containsKey(varName)) {
-
-            }
-
-            WhileArithmeticExpression expression = arithmeticStack.pop();
-
-            WhileVar var;
-            if (arithmeticStack.empty()) {
-                var = new WhileVar(ctx.children.get(0).getText());
+                WhileVar variable = variables.get(varName);
+                switch (variable.getType()) {
+                    case STRING: {
+                        WhileStringExpression stringExpression = stringsStack.pop();
+                        statementStack.add(new WhileAssignment(variable, stringExpression));
+                    }
+                    case BOOL: {
+                        WhileBooleanExpression booleanExpression = booleanStack.pop();
+                        statementStack.add(new WhileAssignment(variable, booleanExpression));
+                    }
+                    case INT:
+                    default: {
+                        WhileArithmeticExpression arithmeticExpression = arithmeticStack.pop();
+                        statementStack.add(new WhileAssignment(variable, arithmeticExpression));
+                    }
+                }
             } else {
-                var = (WhileVar) arithmeticStack.pop();
+                throw new VariableNotDeclaredException(varName);
             }
-
-            statementStack.add(new WhileAssignment(var, expression));
         } else if (ctx.children.size() == 1 && ctx.children.get(0).getText().equals("skip")) {
             statementStack.add(new WhileSkip());
         } else if (ctx.children.size() == 6 && ctx.children.get(0).getText().equals("if")) {
@@ -150,7 +160,18 @@ public class WhileListener extends WhileBaseListener {
         super.exitAtom(ctx);
         if (ctx.children.size() == 1) {
             if (VAR_PATTERN.matcher(ctx.children.get(0).getText()).matches()) {
-                arithmeticStack.add(new WhileVar(ctx.children.get(0).getText()));
+                String varName = ctx.children.get(0).getText();
+                if (variables.containsKey(varName)) {
+                    WhileVar var = variables.get(varName);
+                    if (var.getType() == WhileVarType.INT) {
+                        arithmeticStack.add(new WhileIntVar(ctx.children.get(0).getText()));
+                    } else {
+                        throw new IncompatibleTypeException(var, WhileVarType.INT);
+                    }
+                } else {
+                    throw new VariableNotDeclaredException(varName);
+                }
+
             } else if (INT_PATTERN.matcher(ctx.children.get(0).getText()).matches()) {
                 arithmeticStack.add(new WhileConst(ctx.children.get(0).getText()));
             }
@@ -164,6 +185,18 @@ public class WhileListener extends WhileBaseListener {
             booleanStack.add(new WhileTrueConst());
         } else if (ctx.children.size() == 1 && ctx.children.get(0).getText().equals("false")) {
             booleanStack.add(new WhileFalseConst());
+        } else if (ctx.children.size() == 1 && VAR_PATTERN.matcher(ctx.children.get(0).getText()).matches()) {
+            String varName = ctx.children.get(0).getText();
+            if (variables.containsKey(varName)) {
+                WhileVar var = variables.get(varName);
+                if (var.getType() == WhileVarType.BOOL) {
+                    booleanStack.add(new WhileBoolVar(ctx.children.get(0).getText()));
+                } else {
+                    throw new IncompatibleTypeException(var, WhileVarType.BOOL);
+                }
+            } else {
+                throw new VariableNotDeclaredException(varName);
+            }
         } else if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals("=")) {
             WhileArithmeticExpression right = arithmeticStack.pop();
             WhileArithmeticExpression left = arithmeticStack.pop();
@@ -185,5 +218,9 @@ public class WhileListener extends WhileBaseListener {
     @Override
     public void exitStrexp(WhileParser.StrexpContext ctx) {
         super.exitStrexp(ctx);
+        if (ctx.children.size() == 3) {
+            String str = ctx.children.get(1).getText();
+            stringsStack.add(new WhileString(str));
+        }
     }
 }
