@@ -47,7 +47,7 @@ public class WhileIntVar implements WhileVar, WhileArithmeticExpression, Compara
     }
 
     @Override
-    public WhileVarType getType() {
-        return WhileVarType.INT;
+    public WhileType getType() {
+        return WhileType.INT;
     }
 }

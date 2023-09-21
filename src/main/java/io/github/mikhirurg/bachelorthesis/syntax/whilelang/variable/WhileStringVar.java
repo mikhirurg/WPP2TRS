@@ -9,8 +9,8 @@ public class WhileStringVar implements WhileVar {
     }
 
     @Override
-    public WhileVarType getType() {
-        return WhileVarType.STRING;
+    public WhileType getType() {
+        return WhileType.STRING;
     }
 
     @Override

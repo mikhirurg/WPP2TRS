@@ -13,8 +13,6 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.I
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.VariableNotDeclaredException;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
@@ -40,7 +38,17 @@ public class WhileListener extends WhileBaseListener {
         this.booleanStack = new Stack<>();
         this.statementStack = new Stack<>();
         this.variables = new HashMap<>();
-        stringsStack = new Stack<>();
+        this.stringsStack = new Stack<>();
+    }
+
+    private WhileType getNonEmptyStack() {
+        if (!stringsStack.isEmpty()) {
+            return WhileType.STRING;
+        } else if (!booleanStack.isEmpty()) {
+            return WhileType.BOOL;
+        } else {
+            return WhileType.INT;
+        }
     }
 
     public WhileStatement getProgram() {
@@ -65,10 +73,10 @@ public class WhileListener extends WhileBaseListener {
 
             String varName = ctx.children.get(1).getText();
 
-            WhileVarType varType = switch (ctx.children.get(0).getText()) {
-                case "bool" -> WhileVarType.BOOL;
-                case "string" -> WhileVarType.STRING;
-                default -> WhileVarType.INT;
+            WhileType varType = switch (ctx.children.get(0).getText()) {
+                case "bool" -> WhileType.BOOL;
+                case "string" -> WhileType.STRING;
+                default -> WhileType.INT;
             };
 
             WhileVar variable;
@@ -76,18 +84,29 @@ public class WhileListener extends WhileBaseListener {
                 throw new DuplicateVariableDeclarationException(variables.get(varName));
             } else {
                 switch (varType) {
-                    case STRING: {
+                    case STRING -> {
                         variable = new WhileStringVar(varName);
-                        statementStack.add(new WhileVarDeclaration(variable, stringsStack.pop()));
+                        if (varType == getNonEmptyStack()) {
+                            statementStack.add(new WhileVarDeclaration(variable, stringsStack.pop()));
+                        } else {
+                            throw new IncompatibleTypeException(variable, getNonEmptyStack());
+                        }
                     }
-                    case BOOL: {
+                    case BOOL -> {
                         variable = new WhileBoolVar(varName);
-                        statementStack.add(new WhileVarDeclaration(variable, booleanStack.pop()));
+                        if (varType == getNonEmptyStack()) {
+                            statementStack.add(new WhileVarDeclaration(variable, booleanStack.pop()));
+                        } else {
+                            throw new IncompatibleTypeException(variable, getNonEmptyStack());
+                        }
                     }
-                    case INT:
-                    default: {
+                    default -> {
                         variable = new WhileIntVar(varName);
-                        statementStack.add(new WhileVarDeclaration(variable, arithmeticStack.pop()));
+                        if (varType == getNonEmptyStack()) {
+                            statementStack.add(new WhileVarDeclaration(variable, arithmeticStack.pop()));
+                        } else {
+                            throw new IncompatibleTypeException(variable, getNonEmptyStack());
+                        }
                     }
                 }
 
@@ -128,6 +147,16 @@ public class WhileListener extends WhileBaseListener {
             WhileBooleanExpression expression = booleanStack.pop();
             WhileStatement statement = statementStack.pop();
             statementStack.add(new WhileWhile(expression, statement));
+        } else if (ctx.children.size() == 3 && ctx.children.get(0).getText().equals("print(")) {
+            WhileExpression expression = null;
+            if (!booleanStack.isEmpty()) {
+                expression = booleanStack.pop();
+            } else if (!stringsStack.isEmpty()) {
+                expression = stringsStack.pop();
+            } else if (!arithmeticStack.isEmpty()) {
+                expression = arithmeticStack.pop();
+            }
+            statementStack.add(new WhilePrint(expression));
         }
     }
 
@@ -163,10 +192,10 @@ public class WhileListener extends WhileBaseListener {
                 String varName = ctx.children.get(0).getText();
                 if (variables.containsKey(varName)) {
                     WhileVar var = variables.get(varName);
-                    if (var.getType() == WhileVarType.INT) {
+                    if (var.getType() == WhileType.INT) {
                         arithmeticStack.add(new WhileIntVar(ctx.children.get(0).getText()));
                     } else {
-                        throw new IncompatibleTypeException(var, WhileVarType.INT);
+                        throw new IncompatibleTypeException(var, WhileType.INT);
                     }
                 } else {
                     throw new VariableNotDeclaredException(varName);
@@ -189,10 +218,10 @@ public class WhileListener extends WhileBaseListener {
             String varName = ctx.children.get(0).getText();
             if (variables.containsKey(varName)) {
                 WhileVar var = variables.get(varName);
-                if (var.getType() == WhileVarType.BOOL) {
+                if (var.getType() == WhileType.BOOL) {
                     booleanStack.add(new WhileBoolVar(ctx.children.get(0).getText()));
                 } else {
-                    throw new IncompatibleTypeException(var, WhileVarType.BOOL);
+                    throw new IncompatibleTypeException(var, WhileType.BOOL);
                 }
             } else {
                 throw new VariableNotDeclaredException(varName);

@@ -16,8 +16,8 @@ public class WhileBoolVar implements WhileVar, WhileBooleanExpression {
     }
 
     @Override
-    public WhileVarType getType() {
-        return WhileVarType.BOOL;
+    public WhileType getType() {
+        return WhileType.BOOL;
     }
 
     @Override
