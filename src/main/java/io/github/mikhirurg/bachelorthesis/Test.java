@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class Test {
     public static void main(String[] args) {
-        String program = "int x := 1; print(x); bool y := false; string z := \"HelloWorld\"";
+        String program = "int x := 1; bool y := false; string z := \"Hello World!\"; if (x = 1) then (printString(z); skip; skip) else skip";
 
         WhileLexer whileLexer = new WhileLexer(CharStreams.fromString(program));
 
@@ -26,6 +26,8 @@ public class Test {
         walker.walk(listener, tree);
 
         WhileStatement p = listener.getProgram();
+
+        System.out.println(p.textRepresentation());
 
     }
 }

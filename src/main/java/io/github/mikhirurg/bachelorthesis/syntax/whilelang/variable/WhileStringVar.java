@@ -1,10 +1,14 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable;
 
-public class WhileStringVar implements WhileVar {
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileStringExpression;
+
+public class WhileStringVar extends WhileString implements WhileVar, WhileStringExpression {
 
     private final String varName;
 
     public WhileStringVar(String varName) {
+        super("");
         this.varName = varName;
     }
 

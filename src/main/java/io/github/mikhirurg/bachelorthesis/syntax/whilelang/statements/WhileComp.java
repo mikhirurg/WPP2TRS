@@ -1,5 +1,7 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements;
 
+import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
+
 public class WhileComp implements WhileStatement {
 
     private final WhileStatement statement1;
@@ -22,6 +24,11 @@ public class WhileComp implements WhileStatement {
     @Override
     public String textRepresentation() {
         return statement1.textRepresentation() + ";\n" + statement2.textRepresentation();
+    }
+
+    @Override
+    public void acceptTRSPrinter(TRSPrinter trsPrinter) {
+        trsPrinter.visitComp(this);
     }
 
 }

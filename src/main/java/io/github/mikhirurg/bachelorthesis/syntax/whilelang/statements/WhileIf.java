@@ -1,6 +1,7 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileBooleanExpression;
+import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 public class WhileIf implements WhileStatement {
 
@@ -30,7 +31,12 @@ public class WhileIf implements WhileStatement {
 
     @Override
     public String textRepresentation() {
-        return "if " + condition + " then " + statement1.textRepresentation() + " else " + statement2.textRepresentation();
+        return "if " + condition.textRepresentation() + " then " + statement1.textRepresentation() + " else " + statement2.textRepresentation();
+    }
+
+    @Override
+    public void acceptTRSPrinter(TRSPrinter trsPrinter) {
+
     }
 
 }

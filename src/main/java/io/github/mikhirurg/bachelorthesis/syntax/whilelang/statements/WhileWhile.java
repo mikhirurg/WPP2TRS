@@ -1,6 +1,7 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileBooleanExpression;
+import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 public class WhileWhile implements WhileStatement {
 
@@ -24,6 +25,11 @@ public class WhileWhile implements WhileStatement {
     @Override
     public String textRepresentation() {
         return "while " + condition + " do " + statement;
+    }
+
+    @Override
+    public void acceptTRSPrinter(TRSPrinter trsPrinter) {
+        trsPrinter.visitWhile(this);
     }
 
 }

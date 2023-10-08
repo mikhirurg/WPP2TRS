@@ -88,13 +88,13 @@ public class WhileBaseListener implements WhileListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStrexp(WhileParser.StrexpContext ctx) { }
+	@Override public void enterStrexpr(WhileParser.StrexprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStrexp(WhileParser.StrexpContext ctx) { }
+	@Override public void exitStrexpr(WhileParser.StrexprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

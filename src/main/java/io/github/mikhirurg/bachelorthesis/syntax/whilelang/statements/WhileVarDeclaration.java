@@ -2,6 +2,7 @@ package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.WhileExpression;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
+import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 public class WhileVarDeclaration implements WhileStatement {
 
@@ -18,6 +19,11 @@ public class WhileVarDeclaration implements WhileStatement {
     public String textRepresentation() {
         return variable.getType().getName() + " " + variable.getVarName() +
                 " := " + expression.textRepresentation();
+    }
+
+    @Override
+    public void acceptTRSPrinter(TRSPrinter trsPrinter) {
+        trsPrinter.visitDeclaration(this);
     }
 
     public WhileVar getVariable() {

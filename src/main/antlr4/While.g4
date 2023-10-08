@@ -1,6 +1,6 @@
 grammar While;
 
-prog: stm+ ;
+prog: stm + EOF;
 
 stm: TYPE VAR ':=' expr
     | VAR ':=' expr
@@ -8,7 +8,9 @@ stm: TYPE VAR ':=' expr
     | stm ';' stm
     | 'if' bexp 'then' stm 'else' stm
     | 'while' bexp 'do' stm
-    | 'print(' expr ')'
+    | 'printInt(' aexp ')'
+    | 'printString(' strexpr ')'
+    | 'printBool(' bexp ')'
     | '(' stm ')'
     ;
 
@@ -30,16 +32,16 @@ bexp: 'true'
     | aexp '=' aexp
     | aexp '<=' aexp
     | bexp '=' bexp
-    | strexp '=' strexp
+    | strexpr '=' strexpr
     | NOT '(' bexp ')'
     | bexp AND bexp
     | bexp OR bexp
     | '(' bexp ')'
     ;
 
-strexp: '"' (~('"'))+ '"' ;
+strexpr: STRING | VAR;
 
-expr: aexp | bexp | strexp ;
+expr: strexpr | aexp | bexp ;
 
 TYPE: INT_TYPE | BOOL_TYPE | STRING_TYPE ;
 INT_TYPE: 'int' ;
@@ -49,6 +51,8 @@ STRING_TYPE: 'string' ;
 VAR: [a-zA-Z]+ ;
 
 INT: [0-9]+ ;
+
+STRING: '"' .*? '"';
 
 NOT: 'not' ;
 AND: 'and' ;

@@ -46,11 +46,11 @@ public interface WhileVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBexp(WhileParser.BexpContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link WhileParser#strexp}.
+	 * Visit a parse tree produced by {@link WhileParser#strexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStrexp(WhileParser.StrexpContext ctx);
+	T visitStrexpr(WhileParser.StrexprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WhileParser#expr}.
 	 * @param ctx the parse tree

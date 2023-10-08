@@ -5,10 +5,14 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileBaseListener;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileParser;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintBool;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintInteger;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileStringExpression;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.DuplicateVariableDeclarationException;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.ExpectedTypeException;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.IncompatibleTypeException;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.VariableNotDeclaredException;
 
@@ -30,6 +34,8 @@ public class WhileListener extends WhileBaseListener {
     private static final Pattern VAR_PATTERN = Pattern.compile("[a-zA-Z]+");
 
     private static final Pattern INT_PATTERN = Pattern.compile("[0-9]+");
+
+    private static final Pattern STRING_PATTERN = Pattern.compile("\"(.*)\"");
 
     private WhileStatement program;
 
@@ -147,16 +153,24 @@ public class WhileListener extends WhileBaseListener {
             WhileBooleanExpression expression = booleanStack.pop();
             WhileStatement statement = statementStack.pop();
             statementStack.add(new WhileWhile(expression, statement));
-        } else if (ctx.children.size() == 3 && ctx.children.get(0).getText().equals("print(")) {
-            WhileExpression expression = null;
-            if (!booleanStack.isEmpty()) {
-                expression = booleanStack.pop();
-            } else if (!stringsStack.isEmpty()) {
-                expression = stringsStack.pop();
-            } else if (!arithmeticStack.isEmpty()) {
-                expression = arithmeticStack.pop();
+        } else if (ctx.children.size() == 3 && ctx.children.get(0).getText().equals("printInteger(")) {
+            if (!arithmeticStack.isEmpty()) {
+                statementStack.add(new WhilePrintInteger(arithmeticStack.pop()));
+            } else {
+                throw new ExpectedTypeException(WhileType.INT, getNonEmptyStack());
             }
-            statementStack.add(new WhilePrint(expression));
+        } else if (ctx.children.size() == 3 && ctx.children.get(0).getText().equals("printBool(")) {
+            if (!booleanStack.isEmpty()) {
+                statementStack.add(new WhilePrintBool(booleanStack.pop()));
+            } else {
+                throw new ExpectedTypeException(WhileType.BOOL, getNonEmptyStack());
+            }
+        } else if (ctx.children.size() == 3 && ctx.children.get(0).getText().equals("printString(")) {
+            if (!stringsStack.isEmpty()) {
+                statementStack.add(new WhilePrintString(stringsStack.pop()));
+            } else {
+                throw new ExpectedTypeException(WhileType.STRING, getNonEmptyStack());
+            }
         }
     }
 
@@ -245,11 +259,24 @@ public class WhileListener extends WhileBaseListener {
     }
 
     @Override
-    public void exitStrexp(WhileParser.StrexpContext ctx) {
-        super.exitStrexp(ctx);
-        if (ctx.children.size() == 3) {
-            String str = ctx.children.get(1).getText();
-            stringsStack.add(new WhileString(str));
+    public void exitStrexpr(WhileParser.StrexprContext ctx) {
+        super.exitStrexpr(ctx);
+
+        String string = ctx.getChild(0).getText();
+
+        if (STRING_PATTERN.matcher(string).matches()) {
+            stringsStack.add(new WhileString(string.substring(1, string.length() - 1)));
+        } else if (VAR_PATTERN.matcher(string).matches()) {
+            if (variables.containsKey(string)) {
+                WhileVar var = variables.get(string);
+                if (var.getType() == WhileType.STRING) {
+                    stringsStack.add(new WhileStringVar(ctx.children.get(0).getText()));
+                } else {
+                    throw new IncompatibleTypeException(var, WhileType.BOOL);
+                }
+            } else {
+                throw new VariableNotDeclaredException(string);
+            }
         }
     }
 }

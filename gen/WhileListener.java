@@ -67,15 +67,15 @@ public interface WhileListener extends ParseTreeListener {
 	 */
 	void exitBexp(WhileParser.BexpContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link WhileParser#strexp}.
+	 * Enter a parse tree produced by {@link WhileParser#strexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterStrexp(WhileParser.StrexpContext ctx);
+	void enterStrexpr(WhileParser.StrexprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link WhileParser#strexp}.
+	 * Exit a parse tree produced by {@link WhileParser#strexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitStrexp(WhileParser.StrexpContext ctx);
+	void exitStrexpr(WhileParser.StrexprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link WhileParser#expr}.
 	 * @param ctx the parse tree
