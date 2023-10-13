@@ -22,8 +22,8 @@ public class WhileComp implements WhileStatement {
     }
 
     @Override
-    public String textRepresentation() {
-        return statement1.textRepresentation() + ";\n" + statement2.textRepresentation();
+    public String toString() {
+        return statement1.toString() + ";\n" + statement2.toString();
     }
 
     @Override
@@ -31,4 +31,14 @@ public class WhileComp implements WhileStatement {
         trsPrinter.visitComp(this);
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != WhileComp.class) {
+            return false;
+        }
+
+        WhileComp otherComp = (WhileComp) other;
+
+        return this.statement1.equals(otherComp.statement1) && this.statement2.equals(otherComp.statement2);
+    }
 }

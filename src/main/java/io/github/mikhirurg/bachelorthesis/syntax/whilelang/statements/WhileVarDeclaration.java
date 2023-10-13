@@ -16,9 +16,9 @@ public class WhileVarDeclaration implements WhileStatement {
     }
 
     @Override
-    public String textRepresentation() {
+    public String toString() {
         return variable.getType().getName() + " " + variable.getVarName() +
-                " := " + expression.textRepresentation();
+                " := " + expression.toString();
     }
 
     @Override
@@ -32,5 +32,16 @@ public class WhileVarDeclaration implements WhileStatement {
 
     public WhileExpression getExpression() {
         return expression;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != WhileVarDeclaration.class) {
+            return false;
+        }
+
+        WhileVarDeclaration otherVarDeclaration = (WhileVarDeclaration) other;
+
+        return this.variable.equals(otherVarDeclaration.variable) && this.expression.equals(otherVarDeclaration.expression);
     }
 }

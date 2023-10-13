@@ -1,23 +1,14 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp.WhileArithmeticExpression;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp.WhileConst;
 
-public class WhileIntVar implements WhileVar, WhileArithmeticExpression, Comparable {
+import java.util.Map;
 
-    private final String varName;
+public class WhileIntVar extends WhileVar implements WhileArithmeticExpression, Comparable {
 
     public WhileIntVar(String varName) {
-        this.varName = varName;
-    }
-
-    @Override
-    public String getVarName() {
-        return varName;
-    }
-
-    @Override
-    public int hashCode() {
-        return varName.hashCode();
+        super(varName);
     }
 
     @Override
@@ -26,17 +17,15 @@ public class WhileIntVar implements WhileVar, WhileArithmeticExpression, Compara
             return true;
         }
 
-        if (!(obj instanceof WhileIntVar)) {
+        if (!(obj instanceof WhileIntVar var)) {
             return false;
         }
-
-        WhileIntVar var = (WhileIntVar) obj;
 
         return varName.equals(var.varName);
     }
 
     @Override
-    public String textRepresentation() {
+    public String toString() {
         return varName;
     }
 
@@ -49,5 +38,10 @@ public class WhileIntVar implements WhileVar, WhileArithmeticExpression, Compara
     @Override
     public WhileType getType() {
         return WhileType.INT;
+    }
+
+    @Override
+    public Integer evaluate(Map<WhileVar, Object> map) {
+        return (Integer) map.get(this);
     }
 }

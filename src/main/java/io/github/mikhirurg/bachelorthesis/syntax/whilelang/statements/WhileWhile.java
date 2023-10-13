@@ -23,7 +23,7 @@ public class WhileWhile implements WhileStatement {
     }
 
     @Override
-    public String textRepresentation() {
+    public String toString() {
         return "while " + condition + " do " + statement;
     }
 
@@ -32,4 +32,14 @@ public class WhileWhile implements WhileStatement {
         trsPrinter.visitWhile(this);
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != WhileWhile.class) {
+            return false;
+        }
+
+        WhileWhile otherWhile = (WhileWhile) other;
+
+        return this.condition.equals(otherWhile.condition) && this.statement.equals(otherWhile.statement);
+    }
 }

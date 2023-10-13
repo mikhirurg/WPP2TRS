@@ -4,7 +4,7 @@ import io.github.mikhirurg.bachelorthesis.syntax.SyntaxNode;
 import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 public interface WhileStatement extends SyntaxNode {
-    String textRepresentation();
+    String toString();
 
     void acceptTRSPrinter(TRSPrinter trsPrinter);
 }

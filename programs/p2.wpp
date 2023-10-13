@@ -1,0 +1,5 @@
+bool x := false;
+if not(x) then
+    int y := 0
+else
+    int z := 1

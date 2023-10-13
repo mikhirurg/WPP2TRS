@@ -1,9 +1,12 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable;
 
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileNot;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileStringExpression;
 
-public class WhileStringVar extends WhileString implements WhileVar, WhileStringExpression {
+import java.util.Map;
+
+public class WhileStringVar extends WhileVar implements WhileStringExpression {
 
     private final String varName;
 
@@ -23,7 +26,27 @@ public class WhileStringVar extends WhileString implements WhileVar, WhileString
     }
 
     @Override
-    public String textRepresentation() {
+    public String toString() {
         return varName;
+    }
+
+    @Override
+    public String evaluate(Map<WhileVar, Object> map) {
+        return (String) map.get(this);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (other.getClass() != WhileStringVar.class) {
+            return false;
+        }
+
+        WhileStringVar otherLeq = (WhileStringVar) other;
+
+        return this.varName.equals(otherLeq.varName);
     }
 }

@@ -4,7 +4,7 @@ public class TRSRule {
     private final TRSTerm left;
     private final TRSTerm right;
 
-    private final String condition;
+    private String condition;
 
     public TRSRule(TRSTerm left, TRSTerm right, String condition) {
         this.left = left;
@@ -16,6 +16,9 @@ public class TRSRule {
         this(left, right, "true");
     }
 
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
 
     public TRSTerm getLeft() {
         return left;

@@ -1,8 +1,6 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.WhileExpression;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp.WhileArithmeticExpression;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileIntVar;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
 import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
@@ -26,8 +24,8 @@ public class WhileAssignment implements WhileStatement {
     }
 
     @Override
-    public String textRepresentation() {
-        return variable.textRepresentation() + " := " + expression.textRepresentation();
+    public String toString() {
+        return variable.toString() + " := " + expression.toString();
     }
 
     @Override
@@ -35,4 +33,14 @@ public class WhileAssignment implements WhileStatement {
         trsPrinter.visitAssignment(this);
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != WhileAssignment.class) {
+            return false;
+        }
+
+        WhileAssignment otherAssignment = (WhileAssignment) other;
+
+        return this.expression.equals(otherAssignment.expression) && this.variable.equals(otherAssignment.variable);
+    }
 }

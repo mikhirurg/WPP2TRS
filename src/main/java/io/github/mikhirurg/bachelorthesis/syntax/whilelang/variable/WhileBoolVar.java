@@ -2,16 +2,16 @@ package io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileBooleanExpression;
 
-public class WhileBoolVar implements WhileVar, WhileBooleanExpression {
+import java.util.Map;
 
-    private final String varName;
+public class WhileBoolVar extends WhileVar implements WhileBooleanExpression {
 
     public WhileBoolVar(String varName) {
-        this.varName = varName;
+        super(varName);
     }
 
     @Override
-    public String textRepresentation() {
+    public String toString() {
         return varName;
     }
 
@@ -21,7 +21,7 @@ public class WhileBoolVar implements WhileVar, WhileBooleanExpression {
     }
 
     @Override
-    public String getVarName() {
-        return varName;
+    public Boolean evaluate(Map<WhileVar, Object> map) {
+        return (Boolean) map.get(this);
     }
 }

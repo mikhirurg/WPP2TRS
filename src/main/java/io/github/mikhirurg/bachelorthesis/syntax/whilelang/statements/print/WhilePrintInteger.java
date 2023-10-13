@@ -1,7 +1,6 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.WhileExpression;
-import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 public class WhilePrintInteger extends WhilePrint {
     public WhilePrintInteger(WhileExpression expression) {
@@ -9,12 +8,18 @@ public class WhilePrintInteger extends WhilePrint {
     }
 
     @Override
-    public String textRepresentation() {
-        return "printInteger(" + expression.textRepresentation() + ")";
+    public String toString() {
+        return "printInteger(" + expression.toString() + ")";
     }
 
     @Override
-    public void acceptTRSPrinter(TRSPrinter trsPrinter) {
+    public boolean equals(Object other) {
+        if (other.getClass() != WhilePrintInteger.class) {
+            return false;
+        }
 
+        WhilePrintInteger otherPrintBool = (WhilePrintInteger) other;
+
+        return this.expression.equals(otherPrintBool.expression);
     }
 }

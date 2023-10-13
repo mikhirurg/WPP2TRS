@@ -1,5 +1,9 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp;
 
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
+
+import java.util.Map;
+
 public class WhileAnd implements WhileBooleanExpression {
     private final WhileBooleanExpression left;
     private final WhileBooleanExpression right;
@@ -18,8 +22,27 @@ public class WhileAnd implements WhileBooleanExpression {
     }
 
     @Override
-    public String textRepresentation() {
-        return "(" + left.textRepresentation() + " ^ " + right.textRepresentation() + ")";
+    public String toString() {
+        return "(" + left.toString() + " ^ " + right.toString() + ")";
     }
 
+    @Override
+    public Boolean evaluate(Map<WhileVar, Object> map) {
+        return left.evaluate(map) && right.evaluate(map);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        if (other.getClass() != WhileAnd.class) {
+            return false;
+        }
+
+        WhileAnd otherAnd = (WhileAnd) other;
+
+        return this.left.equals(otherAnd.left) && this.right.equals(otherAnd.right);
+    }
 }

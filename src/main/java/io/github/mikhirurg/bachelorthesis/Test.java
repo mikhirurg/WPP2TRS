@@ -1,33 +1,23 @@
 package io.github.mikhirurg.bachelorthesis;
 
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.WhileListener;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileLexer;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileParser;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.WhileStatement;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
+import io.github.mikhirurg.bachelorthesis.trs.TRSRule;
+
+import java.util.stream.Collectors;
 
 public class Test {
     public static void main(String[] args) {
-        String program = "int x := 1; bool y := false; string z := \"Hello World!\"; if (x = 1) then (printString(z); skip; skip) else skip";
+        String program = "int x := 1; bool y := false; string z := \"Hello World!\"; if (true = true) then (printString(z); skip; skip) else (y := true)";
 
-        WhileLexer whileLexer = new WhileLexer(CharStreams.fromString(program));
+        WhileStatement p = ProgramBuilder.parseProgram(program);
 
-        CommonTokenStream tokens = new CommonTokenStream(whileLexer);
-        WhileParser parser = new WhileParser(tokens);
-        ParseTree tree = parser.prog();
+        System.out.println(p.toString());
 
-        WhileListener listener = new WhileListener();
+        TRSPrinter printer = new TRSPrinter();
 
-        ParseTreeWalker walker = new ParseTreeWalker();
+        p.acceptTRSPrinter(printer);
 
-        walker.walk(listener, tree);
-
-        WhileStatement p = listener.getProgram();
-
-        System.out.println(p.textRepresentation());
-
+        System.out.println(printer.getTRSRules().stream().map(TRSRule::toString).collect(Collectors.joining("\n")));
     }
 }

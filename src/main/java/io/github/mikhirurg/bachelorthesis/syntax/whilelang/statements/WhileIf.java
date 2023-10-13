@@ -30,13 +30,23 @@ public class WhileIf implements WhileStatement {
     }
 
     @Override
-    public String textRepresentation() {
-        return "if " + condition.textRepresentation() + " then " + statement1.textRepresentation() + " else " + statement2.textRepresentation();
+    public String toString() {
+        return "if " + condition.toString() + " then " + statement1.toString() + " else " + statement2.toString();
     }
 
     @Override
     public void acceptTRSPrinter(TRSPrinter trsPrinter) {
-
+        trsPrinter.visitIf(this);
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != WhileIf.class) {
+            return false;
+        }
+
+        WhileIf otherIf = (WhileIf) other;
+
+        return this.condition.equals(otherIf.condition) && this.statement1.equals(otherIf.statement1) && this.statement2.equals(otherIf.statement2);
+    }
 }

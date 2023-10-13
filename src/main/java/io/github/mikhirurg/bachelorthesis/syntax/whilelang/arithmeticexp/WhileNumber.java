@@ -10,4 +10,15 @@ public class WhileNumber {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != WhileNumber.class) {
+            return false;
+        }
+
+        WhileNumber other = (WhileNumber) obj;
+
+        return value == other.value;
+    }
 }
