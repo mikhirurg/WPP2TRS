@@ -28,12 +28,6 @@ public interface WhileVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAexp(WhileParser.AexpContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link WhileParser#multExpr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMultExpr(WhileParser.MultExprContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link WhileParser#atom}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

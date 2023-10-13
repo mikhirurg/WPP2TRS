@@ -180,7 +180,11 @@ public class WhileListener extends WhileBaseListener {
     @Override
     public void exitAexp(WhileParser.AexpContext ctx) {
         super.exitAexp(ctx);
-        if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals("+")) {
+        if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals("*")) {
+            WhileArithmeticExpression right = arithmeticStack.pop();
+            WhileArithmeticExpression left = arithmeticStack.pop();
+            arithmeticStack.add(new WhileMult(left, right));
+        } else if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals("+")) {
             WhileArithmeticExpression right = arithmeticStack.pop();
             WhileArithmeticExpression left = arithmeticStack.pop();
             arithmeticStack.add(new WhilePlus(left, right));
@@ -188,16 +192,6 @@ public class WhileListener extends WhileBaseListener {
             WhileArithmeticExpression right = arithmeticStack.pop();
             WhileArithmeticExpression left = arithmeticStack.pop();
             arithmeticStack.add(new WhileSub(left, right));
-        }
-    }
-
-    @Override
-    public void exitMultExpr(WhileParser.MultExprContext ctx) {
-        super.exitMultExpr(ctx);
-        if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals("*")) {
-            WhileArithmeticExpression right = arithmeticStack.pop();
-            WhileArithmeticExpression left = arithmeticStack.pop();
-            arithmeticStack.add(new WhileMult(left, right));
         }
     }
 

@@ -52,18 +52,6 @@ public class WhileBaseListener implements WhileListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMultExpr(WhileParser.MultExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitMultExpr(WhileParser.MultExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterAtom(WhileParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}

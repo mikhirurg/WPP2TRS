@@ -14,11 +14,9 @@ stm: TYPE VAR ':=' expr
     | '(' stm ')'
     ;
 
-aexp: multExpr (('+' | '-') multExpr)*
-    ;
-
-multExpr
-    : atom ('*' atom)*
+aexp: aexp MULT aexp
+    | aexp (MINUS | PLUS) aexp
+    | atom
     ;
 
 atom: INT
@@ -52,6 +50,10 @@ STRING_TYPE: 'string' ;
 INT: [0-9]+ ;
 
 STRING: '"' .*? '"';
+
+PLUS: '+' ;
+MINUS: '-';
+MULT: '*';
 
 NOT: 'not' ;
 AND: 'and' ;

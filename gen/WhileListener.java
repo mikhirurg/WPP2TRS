@@ -37,16 +37,6 @@ public interface WhileListener extends ParseTreeListener {
 	 */
 	void exitAexp(WhileParser.AexpContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link WhileParser#multExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterMultExpr(WhileParser.MultExprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link WhileParser#multExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitMultExpr(WhileParser.MultExprContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link WhileParser#atom}.
 	 * @param ctx the parse tree
 	 */
