@@ -1,8 +1,8 @@
 package io.github.mikhirurg.bachelorthesis.trs;
 
 public class TRSRule {
-    private final TRSTerm left;
-    private final TRSTerm right;
+    private TRSTerm left;
+    private TRSTerm right;
 
     private String condition;
 
@@ -20,6 +20,14 @@ public class TRSRule {
         this.condition = condition;
     }
 
+    public void setLeft(TRSTerm left) {
+        this.left = left;
+    }
+
+    public void setRight(TRSTerm right) {
+        this.right = right;
+    }
+
     public TRSTerm getLeft() {
         return left;
     }
@@ -30,7 +38,7 @@ public class TRSRule {
 
     @Override
     public String toString() {
-        return left + " -> " + right + "[" + condition + "]";
+        return left + " -> " + right + " [" + condition + "]";
     }
 
     public String getCondition() {

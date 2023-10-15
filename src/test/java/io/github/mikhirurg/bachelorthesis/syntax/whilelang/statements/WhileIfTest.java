@@ -5,7 +5,7 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileEq;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileFalseConst;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileNot;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileTrueConst;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintInteger;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintInt;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileBoolVar;
@@ -17,7 +17,7 @@ class WhileIfTest {
 
     private final WhileIf WHILE_IF_1 = new WhileIf(
             new WhileTrueConst(),
-            new WhilePrintInteger(new WhileConst("10")),
+            new WhilePrintInt(new WhileConst("10")),
             new WhileSkip()
     );
 
@@ -49,7 +49,7 @@ class WhileIfTest {
 
     @Test
     void getStatement1() {
-        assertEquals(new WhilePrintInteger(new WhileConst("10")), WHILE_IF_1.getStatement1());
+        assertEquals(new WhilePrintInt(new WhileConst("10")), WHILE_IF_1.getStatement1());
 
         assertEquals(new WhileIf(
                 new WhileNot(new WhileFalseConst()),
@@ -72,10 +72,10 @@ class WhileIfTest {
 
     @Test
     void testToString() {
-        assertEquals("if true then printInteger(10) else skip", WHILE_IF_1.toString());
-        assertEquals("if true then if not(false) then skip else printString(\"Hello!\") else skip",
+        assertEquals("if true then (printInt(10)) else (skip)", WHILE_IF_1.toString());
+        assertEquals("if true then (if not(false) then (skip) else (printString(\"Hello!\"))) else (skip)",
                 WHILE_IF_2.toString());
-        assertEquals("if (10 = 15) then skip else b := true", WHILE_IF_3.toString());
+        assertEquals("if (10 = 15) then (skip) else (b := true)", WHILE_IF_3.toString());
     }
 
     @Test
@@ -86,7 +86,7 @@ class WhileIfTest {
     void testEquals() {
         assertEquals(new WhileIf(
                 new WhileTrueConst(),
-                new WhilePrintInteger(new WhileConst("10")),
+                new WhilePrintInt(new WhileConst("10")),
                 new WhileSkip()
         ), WHILE_IF_1);
 

@@ -31,7 +31,7 @@ public class WhileIf implements WhileStatement {
 
     @Override
     public String toString() {
-        return "if " + condition.toString() + " then " + statement1.toString() + " else " + statement2.toString();
+        return "if " + condition.toString() + " then (" + statement1.toString() + ") else (" + statement2.toString() + ")";
     }
 
     @Override

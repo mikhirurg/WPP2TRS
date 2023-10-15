@@ -2,10 +2,10 @@ package io.github.mikhirurg.bachelorthesis.trs;
 
 import io.github.mikhirurg.bachelorthesis.ProgramBuilder;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.WhileStatement;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 class TRSPrinterTest {
 
@@ -15,11 +15,13 @@ class TRSPrinterTest {
 
         p1.acceptTRSPrinter(printer);
 
-        System.out.println(printer.getTRSRules()
+        /*System.out.println(printer.getTRSRules()
                 .stream()
                 .map(TRSRule::toString)
                 .collect(Collectors.joining("\n"))
-        );
+        );*/
+
+        System.out.println(printer.getRulesRepresentation());
     }
 
     @org.junit.jupiter.api.Test
@@ -35,5 +37,10 @@ class TRSPrinterTest {
     @org.junit.jupiter.api.Test
     void testProgram3() throws IOException {
         test(new File("programs/p3.wpp"));
+    }
+
+    @Test
+    void testProgram4() throws IOException {
+        test(new File("programs/p4.wpp"));
     }
 }

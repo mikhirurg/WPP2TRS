@@ -24,7 +24,7 @@ public class WhileWhile implements WhileStatement {
 
     @Override
     public String toString() {
-        return "while " + condition + " do " + statement;
+        return "while " + condition + " do (" + statement + ")";
     }
 
     @Override

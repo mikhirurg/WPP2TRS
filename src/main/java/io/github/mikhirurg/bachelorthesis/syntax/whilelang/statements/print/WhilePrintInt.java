@@ -2,23 +2,23 @@ package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.WhileExpression;
 
-public class WhilePrintInteger extends WhilePrint {
-    public WhilePrintInteger(WhileExpression expression) {
+public class WhilePrintInt extends WhilePrint {
+    public WhilePrintInt(WhileExpression expression) {
         super(expression);
     }
 
     @Override
     public String toString() {
-        return "printInteger(" + expression.toString() + ")";
+        return "printInt(" + expression.toString() + ")";
     }
 
     @Override
     public boolean equals(Object other) {
-        if (other.getClass() != WhilePrintInteger.class) {
+        if (other.getClass() != WhilePrintInt.class) {
             return false;
         }
 
-        WhilePrintInteger otherPrintBool = (WhilePrintInteger) other;
+        WhilePrintInt otherPrintBool = (WhilePrintInt) other;
 
         return this.expression.equals(otherPrintBool.expression);
     }

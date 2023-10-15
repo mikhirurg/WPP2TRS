@@ -5,13 +5,13 @@ prog: stm + EOF;
 stm: TYPE VAR ':=' expr
     | VAR ':=' expr
     | 'skip'
-    | stm ';' stm
-    | 'if' bexp 'then' stm 'else' stm
-    | 'while' bexp 'do' stm
     | 'printInt' '(' aexp ')'
     | 'printString' '(' strexpr ')'
     | 'printBool' '(' bexp ')'
+    | 'if' bexp 'then' stm 'else' stm
+    | 'while' bexp 'do' stm
     | '(' stm ')'
+    | stm ';' stm
     ;
 
 aexp: aexp MULT aexp

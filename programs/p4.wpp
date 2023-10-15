@@ -1,0 +1,2 @@
+printInt(10) ;
+printBool(true)

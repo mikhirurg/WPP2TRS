@@ -161,10 +161,15 @@ class ProgramBuilderTest {
                                 new WhileBoolVar("b"),
                                 new WhileLeq(
                                         new WhileConst("10"),
-                                        new WhileConst("20")
+                                        new WhilePlus(
+                                                new WhilePlus(
+                                                        new WhileConst("20"),
+                                                        new WhileConst("10")
+                                                ),
+                                                new WhileConst("30")
+                                        )
                                 )
-                        )
-                ), statement
+                        )), statement
         );
     }
 

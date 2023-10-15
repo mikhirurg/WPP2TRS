@@ -6,7 +6,7 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileBaseListener
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.gen.WhileParser;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintBool;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintInteger;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintInt;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileStringExpression;
@@ -158,7 +158,7 @@ public class WhileListener extends WhileBaseListener {
             statementStack.add(new WhileWhile(expression, statement));
         } else if (ctx.children.size() == 4 && ctx.children.get(0).getText().equals("printInt")) {
             if (!arithmeticStack.isEmpty()) {
-                statementStack.add(new WhilePrintInteger(arithmeticStack.pop()));
+                statementStack.add(new WhilePrintInt(arithmeticStack.pop()));
             } else {
                 throw new ExpectedTypeException(WhileType.INT);
             }

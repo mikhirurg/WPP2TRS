@@ -50,9 +50,9 @@ class WhileWhileTest {
 
     @Test
     void testToString() {
-        assertEquals("while true do skip", WHILE_WHILE_1.toString());
+        assertEquals("while true do (skip)", WHILE_WHILE_1.toString());
 
-        assertEquals("while (x <= 10) do x := (x + 1)", WHILE_WHILE_2.toString());
+        assertEquals("while (x <= 10) do (x := (x + 1))", WHILE_WHILE_2.toString());
     }
 
     @Test

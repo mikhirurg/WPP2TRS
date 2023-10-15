@@ -9,8 +9,8 @@ import java.util.List;
 public class Test2 {
     public static void main(String[] args) {
         TRSTerm term = new TRSFunction("f", List.of(
-           new TRSVariable("x"),
-           new TRSFunction("g", List.of(new TRSVariable("y"), new TRSVariable("z")))
+           new TRSVariable("x", ""),
+           new TRSFunction("g", List.of(new TRSVariable("y", ""), new TRSVariable("z", "")))
         ));
 
         System.out.println(term);
