@@ -27,6 +27,26 @@ public interface WhileListener extends ParseTreeListener {
 	 */
 	void exitStm(WhileParser.StmContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link WhileParser#branchOne}.
+	 * @param ctx the parse tree
+	 */
+	void enterBranchOne(WhileParser.BranchOneContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WhileParser#branchOne}.
+	 * @param ctx the parse tree
+	 */
+	void exitBranchOne(WhileParser.BranchOneContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WhileParser#branchTwo}.
+	 * @param ctx the parse tree
+	 */
+	void enterBranchTwo(WhileParser.BranchTwoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WhileParser#branchTwo}.
+	 * @param ctx the parse tree
+	 */
+	void exitBranchTwo(WhileParser.BranchTwoContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link WhileParser#aexp}.
 	 * @param ctx the parse tree
 	 */

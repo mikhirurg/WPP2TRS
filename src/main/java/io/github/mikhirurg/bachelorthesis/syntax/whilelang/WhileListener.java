@@ -28,7 +28,9 @@ public class WhileListener extends WhileBaseListener {
 
     private final Stack<WhileStatement> statementStack;
 
-    private final HashMap<String, WhileVar> variables;
+    private HashMap<String, WhileVar> variables;
+
+    private HashMap<String, WhileVar> tmpVariables;
 
     private static final Pattern VAR_PATTERN = Pattern.compile("[a-zA-Z]+");
 
@@ -43,6 +45,7 @@ public class WhileListener extends WhileBaseListener {
         this.booleanStack = new Stack<>();
         this.statementStack = new Stack<>();
         this.variables = new HashMap<>();
+        this.tmpVariables = new HashMap<>();
         this.stringsStack = new Stack<>();
     }
 
@@ -66,6 +69,26 @@ public class WhileListener extends WhileBaseListener {
     }
 
     @Override
+    public void enterStm(WhileParser.StmContext ctx) {
+        super.enterStm(ctx);
+        if (ctx.children.size() == 4 && ctx.children.get(0).getText().equals("while")) {
+            tmpVariables = new HashMap<>(variables);
+        }
+    }
+
+    @Override
+    public void enterBranchOne(WhileParser.BranchOneContext ctx) {
+        super.enterBranchOne(ctx);
+        tmpVariables = new HashMap<>(variables);
+    }
+
+    @Override
+    public void enterBranchTwo(WhileParser.BranchTwoContext ctx) {
+        super.enterBranchTwo(ctx);
+        tmpVariables = new HashMap<>(variables);
+    }
+
+    @Override
     public void exitProg(WhileParser.ProgContext ctx) {
         super.exitProg(ctx);
 
@@ -75,6 +98,7 @@ public class WhileListener extends WhileBaseListener {
     @Override
     public void exitStm(WhileParser.StmContext ctx) {
         super.exitStm(ctx);
+
         if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals(";")) {
             WhileStatement s2 = statementStack.pop();
             WhileStatement s1 = statementStack.pop();
@@ -153,6 +177,7 @@ public class WhileListener extends WhileBaseListener {
             WhileStatement s1 = statementStack.pop();
             statementStack.add(new WhileIf(expression, s1, s2));
         } else if (ctx.children.size() == 4 && ctx.children.get(0).getText().equals("while")) {
+            variables = new HashMap<>(tmpVariables);
             WhileBooleanExpression expression = booleanStack.pop();
             WhileStatement statement = statementStack.pop();
             statementStack.add(new WhileWhile(expression, statement));
@@ -175,6 +200,18 @@ public class WhileListener extends WhileBaseListener {
                 throw new ExpectedTypeException(WhileType.STRING);
             }
         }
+    }
+
+    @Override
+    public void exitBranchOne(WhileParser.BranchOneContext ctx) {
+        super.exitBranchOne(ctx);
+        variables = new HashMap<>(tmpVariables);
+    }
+
+    @Override
+    public void exitBranchTwo(WhileParser.BranchTwoContext ctx) {
+        super.exitBranchTwo(ctx);
+        variables = new HashMap<>(tmpVariables);
     }
 
     @Override

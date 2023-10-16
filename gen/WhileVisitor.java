@@ -22,6 +22,18 @@ public interface WhileVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStm(WhileParser.StmContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link WhileParser#branchOne}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBranchOne(WhileParser.BranchOneContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WhileParser#branchTwo}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBranchTwo(WhileParser.BranchTwoContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link WhileParser#aexp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

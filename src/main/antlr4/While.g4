@@ -8,11 +8,15 @@ stm: TYPE VAR ':=' expr
     | 'printInt' '(' aexp ')'
     | 'printString' '(' strexpr ')'
     | 'printBool' '(' bexp ')'
-    | 'if' bexp 'then' stm 'else' stm
+    | 'if' bexp 'then' branchOne 'else' branchTwo
     | 'while' bexp 'do' stm
     | '(' stm ')'
     | stm ';' stm
     ;
+
+branchOne : stm ;
+
+branchTwo : stm ;
 
 aexp: aexp MULT aexp
     | aexp (MINUS | PLUS) aexp
