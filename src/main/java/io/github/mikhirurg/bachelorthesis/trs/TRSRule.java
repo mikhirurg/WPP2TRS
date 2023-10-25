@@ -38,7 +38,7 @@ public class TRSRule {
 
     @Override
     public String toString() {
-        return left + " -> " + right + " [" + condition + "]";
+        return left + " -> " + right + " | " + condition;
     }
 
     public String getCondition() {

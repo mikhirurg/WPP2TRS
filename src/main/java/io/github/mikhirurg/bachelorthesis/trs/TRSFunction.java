@@ -1,5 +1,7 @@
 package io.github.mikhirurg.bachelorthesis.trs;
 
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class TRSFunction implements TRSTerm {
     }
 
     public TRSFunction(String name, List<TRSTerm> terms) {
-        this(name, terms, "Unit");
+        this(name, terms, WhileType.UNIT.getName());
     }
 
     public String getName() {

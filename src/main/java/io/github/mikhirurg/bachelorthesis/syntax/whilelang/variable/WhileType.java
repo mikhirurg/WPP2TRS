@@ -1,7 +1,7 @@
 package io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable;
 
 public enum WhileType {
-    INT("int"), BOOL("bool"), STRING("string");
+    INT("Int"), BOOL("Bool"), STRING("String"), UNIT("unit");
 
     private final String name;
     private WhileType(String name) {

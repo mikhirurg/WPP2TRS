@@ -7,6 +7,7 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileType;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TRSPrinter {
     private static class State {
@@ -88,17 +89,13 @@ public class TRSPrinter {
                 .substring(4))));
 
         String name = "";
-        String type = "";
+        String type;
 
         StringBuilder builder = new StringBuilder();
         StringBuilder signatureBuilder = new StringBuilder();
 
         for (TRSRule rule : rules) {
-            if (!name.equals(((TRSFunction) rule.getLeft()).getName()) || !type.equals(rule.getRight().getType())) {
-                if (!builder.isEmpty()) {
-                    builder.append("\n");
-                }
-
+            if (!((TRSFunction)rule.getLeft()).getName().equals(name)) {
                 name = ((TRSFunction) rule.getLeft()).getName();
                 type = rule.getRight().getType();
 
@@ -106,11 +103,16 @@ public class TRSPrinter {
                 for (TRSTerm trsTerm : ((TRSFunction) rule.getLeft()).getTerms()) {
                     signatureBuilder.append(trsTerm.getType()).append(" -> ");
                 }
-                signatureBuilder.append(rule.getRight().getType());
+                signatureBuilder.append(type);
                 builder.append(signatureBuilder).append("\n");
 
                 signatureBuilder.setLength(0);
             }
+        }
+
+        builder.append("\n");
+
+        for (TRSRule rule : rules) {
             builder.append(rule).append("\n");
         }
 
@@ -143,9 +145,9 @@ public class TRSPrinter {
         rightVars.set(state.getPosition().get(assignment.getVariable()),
                 new TRSVariable(assignment.getExpression().toString(), assignment.getVariable().getType().getName()));
 
-        TRSFunction left = new TRSFunction("stm_" + state.getI(), leftVars);
+        TRSFunction left = new TRSFunction("stm_" + state.getI(), leftVars, WhileType.STRING.getName());
         state.setI(state.getI() + 1);
-        TRSFunction right = new TRSFunction("stm_" + state.getI(), rightVars);
+        TRSFunction right = new TRSFunction("stm_" + state.getI(), rightVars, WhileType.STRING.getName());
 
         trs.add(new TRSRule(left, right));
     }
@@ -163,7 +165,7 @@ public class TRSPrinter {
 
         // Signature: s, i = i_1
         whileIf.getStatement1().acceptTRSPrinter(this);
-        TRSTerm left = new TRSFunction("stm_" + state.getI(), buildVars());
+        TRSTerm left = new TRSFunction("stm_" + state.getI(), buildVars(), WhileType.STRING.getName());
         TRSTerm right = new TRSVariable("", "");
         trs.add(new TRSRule(left, right));
         int endBranch1 = trs.size() - 1;
@@ -181,7 +183,7 @@ public class TRSPrinter {
         state.setI(i);
 
         whileIf.getStatement2().acceptTRSPrinter(this);
-        left = new TRSFunction("stm_" + state.getI(), buildVars());
+        left = new TRSFunction("stm_" + state.getI(), buildVars(), WhileType.STRING.getName());
         right = new TRSVariable("", "");
         trs.add(new TRSRule(left, right));
         int endBranch2 = trs.size() - 1;
@@ -194,7 +196,7 @@ public class TRSPrinter {
 
         state = new State(copy);
 
-        right = new TRSFunction("stm_" + state.getI(), buildVars());
+        right = new TRSFunction("stm_" + state.getI(), buildVars(), WhileType.STRING.getName());
         trs.get(endBranch1).setRight(right);
         trs.get(endBranch2).setRight(right);
     }
@@ -213,16 +215,16 @@ public class TRSPrinter {
         rightVars.set(state.getPosition().get(declaration.getVariable()),
                 new TRSVariable(declaration.getExpression().toString(), declaration.getVariable().getType().getName()));
 
-        TRSFunction left = new TRSFunction("stm_" + state.getI(), leftVars);
+        TRSFunction left = new TRSFunction("stm_" + state.getI(), leftVars, WhileType.STRING.getName());
         state.setI(state.getI() + 1);
-        TRSFunction right = new TRSFunction("stm_" + state.getI(), rightVars);
+        TRSFunction right = new TRSFunction("stm_" + state.getI(), rightVars, WhileType.STRING.getName());
 
         trs.add(new TRSRule(left, right));
     }
 
     public void visitWhile(WhileWhile whileWhile) {
         List<TRSTerm> leftVars = buildVars();
-        new TRSFunction("stm_" + state.getI(), leftVars);
+        new TRSFunction("stm_" + state.getI(), leftVars, WhileType.STRING.getName());
         TRSTerm left;
 
         int index = trs.size();
@@ -235,7 +237,7 @@ public class TRSPrinter {
         trs.get(index).setCondition(whileWhile.getCondition().toString());
 
         leftVars = buildVars();
-        left = new TRSFunction("stm_" + state.getI(), leftVars);
+        left = new TRSFunction("stm_" + state.getI(), leftVars, WhileType.STRING.getName());
         right = trs.get(index).getLeft();
 
         trs.add(new TRSRule(left, right, whileWhile.getCondition().toString()));
@@ -246,7 +248,7 @@ public class TRSPrinter {
         state = new State(copy);
 
         List<TRSTerm> rightVars = buildVars();
-        right = new TRSFunction("stm_" + state.getI(), rightVars);
+        right = new TRSFunction("stm_" + state.getI(), rightVars, WhileType.STRING.getName());
 
         trs.add(new TRSRule(left, right, new WhileNot(whileWhile.getCondition()).toString()));
 
@@ -256,14 +258,14 @@ public class TRSPrinter {
 
     public void visitPrint(WhilePrint whilePrint) {
         List<TRSTerm> leftVars = buildVars();
-        TRSTerm left = new TRSFunction("stm_" + state.getI(), leftVars);
+        TRSTerm left = new TRSFunction("stm_" + state.getI(), leftVars, WhileType.STRING.getName());
 
         state.setI(state.getI() + 1);
 
         List<TRSTerm> rightVars = buildVars();
         rightVars.set(rightVars.size() - 1, new TRSVariable("out ++ "+ whilePrint.getExpression().toString(),
                 WhileType.STRING.getName()));
-        TRSTerm right = new TRSFunction("stm_" + state.getI(), rightVars);
+        TRSTerm right = new TRSFunction("stm_" + state.getI(), rightVars, WhileType.STRING.getName());
 
         trs.add(new TRSRule(left, right));
     }
