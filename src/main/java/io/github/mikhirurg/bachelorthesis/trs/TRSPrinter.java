@@ -62,12 +62,20 @@ public class TRSPrinter {
         }
     }
 
-    private final static String LIST_RULES =
-            "nil :: list\n" +
-            "cons :: String -> list -> list\n" +
-            "append :: String -> list -> list\n" +
-            "\n" +
-            "append(str, l) -> cons(str, l)\n\n";
+    private final static String LIST_RULES = """
+            nil :: list
+            consI :: Int -> list -> list
+            consB :: Bool -> list -> list
+            consS :: String -> list -> list
+            appendI :: Int -> list -> list
+            appendB :: Bool -> list -> list
+            appendS :: String -> list -> list
+
+            appendI(i, l) -> consI(i, l)
+            appendB(b, l) -> consB(b, l)
+            appendS(str, l) -> consS(str, l)
+
+            """;
     private State state;
 
     private final List<TRSRule> trs;
@@ -268,8 +276,15 @@ public class TRSPrinter {
 
         state.setI(state.getI() + 1);
 
+        String appendType = switch (whilePrint.getExpression().getType()) {
+            case INT -> "appendI";
+            case BOOL -> "appendB";
+            case STRING -> "appendS";
+            default -> "";
+        };
+
         List<TRSTerm> rightVars = buildVars();
-        rightVars.set(rightVars.size() - 1, new TRSVariable("append("+ whilePrint.getExpression().toString() +
+        rightVars.set(rightVars.size() - 1, new TRSVariable(appendType + "("+ whilePrint.getExpression().toString() +
                 ", out)", WhileType.LIST.getName()));
         TRSTerm right = new TRSFunction("stm_" + state.getI(), rightVars, WhileType.LIST.getName());
 

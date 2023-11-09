@@ -15,6 +15,7 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.D
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.ExpectedTypeException;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.IncompatibleTypeException;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.VariableNotDeclaredException;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -62,6 +63,16 @@ public class WhileListener extends WhileBaseListener {
         }
 
         return types;
+    }
+
+    private void processVariable(WhileVar var, ParserRuleContext ctx) {
+        if (var.getType() == WhileType.INT) {
+            arithmeticStack.add(new WhileIntVar(ctx.children.get(0).getText()));
+        } else if (var.getType() == WhileType.BOOL) {
+            booleanStack.add(new WhileBoolVar(ctx.children.get(0).getText()));
+        } else if (var.getType() == WhileType.STRING) {
+            stringsStack.add(new WhileStringVar(ctx.children.get(0).getText()));
+        }
     }
 
     public WhileStatement getProgram() {
@@ -240,11 +251,12 @@ public class WhileListener extends WhileBaseListener {
                 String varName = ctx.children.get(0).getText();
                 if (variables.containsKey(varName)) {
                     WhileVar var = variables.get(varName);
-                    if (var.getType() == WhileType.INT) {
+                    processVariable(var, ctx);
+                    /*if (var.getType() == WhileType.INT) {
                         arithmeticStack.add(new WhileIntVar(ctx.children.get(0).getText()));
                     } else {
                         throw new IncompatibleTypeException(var, WhileType.INT);
-                    }
+                    }*/
                 } else {
                     throw new VariableNotDeclaredException(varName);
                 }
@@ -266,11 +278,12 @@ public class WhileListener extends WhileBaseListener {
             String varName = ctx.children.get(0).getText();
             if (variables.containsKey(varName)) {
                 WhileVar var = variables.get(varName);
-                if (var.getType() == WhileType.BOOL) {
+                processVariable(var, ctx);
+                /*if (var.getType() == WhileType.BOOL) {
                     booleanStack.add(new WhileBoolVar(ctx.children.get(0).getText()));
                 } else {
                     throw new IncompatibleTypeException(var, WhileType.BOOL);
-                }
+                }*/
             } else {
                 throw new VariableNotDeclaredException(varName);
             }
@@ -324,11 +337,12 @@ public class WhileListener extends WhileBaseListener {
         } else if (VAR_PATTERN.matcher(string).matches()) {
             if (variables.containsKey(string)) {
                 WhileVar var = variables.get(string);
-                if (var.getType() == WhileType.STRING) {
+                processVariable(var, ctx);
+                /*if (var.getType() == WhileType.STRING) {
                     stringsStack.add(new WhileStringVar(ctx.children.get(0).getText()));
                 } else {
-                    throw new IncompatibleTypeException(var, WhileType.BOOL);
-                }
+                    throw new IncompatibleTypeException(var, WhileType.STRING);
+                }*/
             } else {
                 throw new VariableNotDeclaredException(string);
             }

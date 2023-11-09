@@ -43,4 +43,14 @@ class TRSPrinterTest {
     void testProgram4() throws IOException {
         test(new File("programs/p4.wpp"));
     }
+
+    @Test
+    void testProgramEuclid() throws IOException {
+        test(new File("programs/euclid.wpp"));
+    }
+
+    @Test
+    void testProgramPow() throws IOException {
+        test(new File("programs/pow.wpp"));
+    }
 }

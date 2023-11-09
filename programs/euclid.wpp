@@ -1,0 +1,18 @@
+int a := 25;
+int b := 75;
+int aCopy := a;
+int bCopy := b;
+while not(b = 0) do (
+    int t := b;
+    int tmp := a;
+    while b <= tmp do (
+        tmp := tmp - b
+    );
+    b := tmp;
+    a := t
+);
+printString("The gcd value for integers ");
+printInt(aCopy);
+printInt(bCopy);
+printString("is: ");
+printInt(a)
