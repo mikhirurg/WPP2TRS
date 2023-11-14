@@ -8,6 +8,9 @@ stm: TYPE VAR ':=' expr
     | 'printInt' '(' aexp ')'
     | 'printString' '(' strexpr ')'
     | 'printBool' '(' bexp ')'
+    | 'readInt' '(' VAR ')'
+    | 'readString' '(' VAR ')'
+    | 'readBool' '(' VAR ')'
     | 'if' bexp 'then' branchOne 'else' branchTwo
     | 'while' bexp 'do' stm
     | '(' stm ')'

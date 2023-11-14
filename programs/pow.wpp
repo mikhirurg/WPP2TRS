@@ -7,10 +7,11 @@ while 1 <= counter do (
     counter := counter - 1
 );
 printString("x^n, (where:");
-printString("x = ");
+printString(" x = ");
 printInt(x);
-printString("n = ");
+printString(", n = ");
 printInt(n);
 printString(")");
-printString("=");
-printInt(result)
+printString(" = ");
+printInt(result);
+printString("\n")

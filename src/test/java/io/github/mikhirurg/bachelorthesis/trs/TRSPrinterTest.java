@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 class TRSPrinterTest {
 
@@ -22,6 +23,15 @@ class TRSPrinterTest {
         );*/
 
         System.out.println(printer.getRulesRepresentation());
+
+        String outName = "results/" + file.getName().substring(0, file.getName().indexOf(".")) + ".lcstrs";
+        File outFile = new File(outName);
+
+        if (outFile.exists() || outFile.createNewFile()) {
+            PrintWriter printWriter = new PrintWriter(outName);
+            printWriter.println(printer.getRulesRepresentation());
+            printWriter.close();
+        }
     }
 
     @org.junit.jupiter.api.Test
@@ -52,5 +62,15 @@ class TRSPrinterTest {
     @Test
     void testProgramPow() throws IOException {
         test(new File("programs/pow.wpp"));
+    }
+
+    @Test
+    void testPrimeTest() throws IOException {
+        test(new File("programs/prime_test.wpp"));
+    }
+
+    @Test
+    void testNearestSquareRoot() throws IOException {
+        test(new File("programs/square_root.wpp"));
     }
 }

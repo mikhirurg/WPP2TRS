@@ -8,6 +8,9 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintBool;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintInt;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintString;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.read.WhileReadBool;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.read.WhileReadInt;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.read.WhileReadString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileStringExpression;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.*;
@@ -210,6 +213,27 @@ public class WhileListener extends WhileBaseListener {
             } else {
                 throw new ExpectedTypeException(WhileType.STRING);
             }
+        } else if (ctx.children.size() == 4 && ctx.children.get(0).getText().equals("readInt")) {
+            String varName = ctx.children.get(2).getText();
+            if (variables.containsKey(varName)) {
+                statementStack.add(new WhileReadInt(variables.get(varName)));
+            } else {
+                throw new ExpectedTypeException(WhileType.INT);
+            }
+        } else if (ctx.children.size() == 4 && ctx.children.get(0).getText().equals("readString")) {
+            String varName = ctx.children.get(2).getText();
+            if (variables.containsKey(varName)) {
+                statementStack.add(new WhileReadString(variables.get(varName)));
+            } else {
+                throw new ExpectedTypeException(WhileType.STRING);
+            }
+        } else if (ctx.children.size() == 4 && ctx.children.get(0).getText().equals("readBool")) {
+            String varName = ctx.children.get(2).getText();
+            if (variables.containsKey(varName)) {
+                statementStack.add(new WhileReadBool(variables.get(varName)));
+            } else {
+                throw new ExpectedTypeException(WhileType.BOOL);
+            }
         }
     }
 
@@ -333,7 +357,8 @@ public class WhileListener extends WhileBaseListener {
         String string = ctx.getChild(0).getText();
 
         if (STRING_PATTERN.matcher(string).matches()) {
-            stringsStack.add(new WhileString(string.substring(1, string.length() - 1)));
+            String stringValue = string.substring(1, string.length() - 1);
+            stringsStack.add(new WhileString(stringValue));
         } else if (VAR_PATTERN.matcher(string).matches()) {
             if (variables.containsKey(string)) {
                 WhileVar var = variables.get(string);

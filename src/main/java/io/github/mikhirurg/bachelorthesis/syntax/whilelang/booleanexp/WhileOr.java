@@ -23,7 +23,7 @@ public class WhileOr implements WhileBooleanExpression {
 
     @Override
     public String toString() {
-        return "(" + left.toString() + " V " + right.toString() + ")";
+        return "(" + left.toString() + " \\/ " + right.toString() + ")";
     }
 
     @Override

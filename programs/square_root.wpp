@@ -1,0 +1,6 @@
+int n := 45;
+int x := 0;
+while x * x <= n and not(x * x = n) do (
+    x := x + 1
+);
+printInt(x)

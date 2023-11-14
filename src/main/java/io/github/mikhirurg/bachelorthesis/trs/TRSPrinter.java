@@ -3,6 +3,7 @@ package io.github.mikhirurg.bachelorthesis.trs;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileNot;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrint;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.read.WhileRead;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileType;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
 
@@ -62,19 +63,37 @@ public class TRSPrinter {
         }
     }
 
-    private final static String LIST_RULES = """
+    private final static String LIST_RULES =
+            """
             nil :: list
             consI :: Int -> list -> list
             consB :: Bool -> list -> list
             consS :: String -> list -> list
+            
             appendI :: Int -> list -> list
             appendB :: Bool -> list -> list
             appendS :: String -> list -> list
+            
+            takeI :: list -> Int
+            takeB :: list -> Bool
+            takeS :: list -> String
+            
+            moveI :: list -> list
+            moveB :: list -> list
+            moveS :: list -> list
 
             appendI(i, l) -> consI(i, l)
             appendB(b, l) -> consB(b, l)
             appendS(str, l) -> consS(str, l)
 
+            takeI(consI(i, l)) -> i
+            takeB(consB(b, l)) -> b
+            takeS(consS(str, l)) -> str
+
+            moveI(consI(i, l)) -> l
+            moveB(consB(b, l)) -> l
+            moveS(consS(str, l)) -> l
+            
             """;
     private State state;
 
@@ -286,6 +305,36 @@ public class TRSPrinter {
         List<TRSTerm> rightVars = buildVars();
         rightVars.set(rightVars.size() - 1, new TRSVariable(appendType + "("+ whilePrint.getExpression().toString() +
                 ", out)", WhileType.LIST.getName()));
+        TRSTerm right = new TRSFunction("stm_" + state.getI(), rightVars, WhileType.LIST.getName());
+
+        trs.add(new TRSRule(left, right));
+    }
+
+    public void visitRead(WhileRead whileRead) {
+        List<TRSTerm> leftVars = buildVars();
+        TRSTerm left = new TRSFunction("stm_" + state.getI(), leftVars, WhileType.LIST.getName());
+
+        state.setI(state.getI() + 1);
+
+        String takeType = switch (whileRead.getVariable().getType()) {
+            case INT -> "takeI";
+            case BOOL -> "takeB";
+            case STRING -> "takeS";
+            default -> "";
+        };
+
+        String moveType = switch (whileRead.getVariable().getType()) {
+            case INT -> "moveI";
+            case BOOL -> "moveB";
+            case STRING -> "moveS";
+            default -> "";
+        };
+
+        List<TRSTerm> rightVars = buildVars();
+        rightVars.set(state.position.get(whileRead.getVariable()), new TRSVariable(takeType + "(in)",
+                whileRead.getVariable().getType().getName()));
+        rightVars.set(rightVars.size() - 2, new TRSVariable(moveType + "(in)", WhileType.LIST.getName()));
+
         TRSTerm right = new TRSFunction("stm_" + state.getI(), rightVars, WhileType.LIST.getName());
 
         trs.add(new TRSRule(left, right));

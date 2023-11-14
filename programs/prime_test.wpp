@@ -1,0 +1,13 @@
+int n := 1009;
+int i := 2;
+bool isPrime := true;
+while i * i <= n and isPrime do (
+    int m := n;
+    while not(m <= 0) do (
+        m := m - i
+    );
+    if m = 0 then isPrime := false
+    else i := i + 1
+);
+if isPrime then printString("The given number is prime\n")
+else printString("The given number is not prime\n")
