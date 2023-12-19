@@ -1,0 +1,38 @@
+nil :: list
+consI :: Int -> list -> list
+consB :: Bool -> list -> list
+consS :: String -> list -> list
+
+appendI :: Int -> list -> list
+appendB :: Bool -> list -> list
+appendS :: String -> list -> list
+
+takeI :: list -> Int
+takeB :: list -> Bool
+takeS :: list -> String
+
+moveI :: list -> list
+moveB :: list -> list
+moveS :: list -> list
+
+appendI(i, l) -> consI(i, l)
+appendB(b, l) -> consB(b, l)
+appendS(str, l) -> consS(str, l)
+
+takeI(consI(i, l)) -> i
+takeB(consB(b, l)) -> b
+takeS(consS(str, l)) -> str
+
+moveI(consI(i, l)) -> l
+moveB(consB(b, l)) -> l
+moveS(consS(str, l)) -> l
+
+stm_0_0 :: list -> list -> list
+stm_0_1 :: list -> list -> list
+stm_1_0 :: list -> list -> list
+stm_1_1 :: list -> list -> list
+
+stm_0_0(in, out) -> stm_0_1(in, appendI(10, out)) | true
+stm_0_1(in, out) -> stm_1_0(in, out) | true
+stm_1_0(in, out) -> stm_1_1(in, appendB(true, out)) | true
+stm_1_1(in, out) -> out | true

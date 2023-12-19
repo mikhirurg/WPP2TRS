@@ -1,0 +1,51 @@
+nil :: list
+consI :: Int -> list -> list
+consB :: Bool -> list -> list
+consS :: String -> list -> list
+
+appendI :: Int -> list -> list
+appendB :: Bool -> list -> list
+appendS :: String -> list -> list
+
+takeI :: list -> Int
+takeB :: list -> Bool
+takeS :: list -> String
+
+moveI :: list -> list
+moveB :: list -> list
+moveS :: list -> list
+
+appendI(i, l) -> consI(i, l)
+appendB(b, l) -> consB(b, l)
+appendS(str, l) -> consS(str, l)
+
+takeI(consI(i, l)) -> i
+takeB(consB(b, l)) -> b
+takeS(consS(str, l)) -> str
+
+moveI(consI(i, l)) -> l
+moveB(consB(b, l)) -> l
+moveS(consS(str, l)) -> l
+
+stm_0_0 :: list -> list -> list
+stm_0_1 :: list -> list -> Bool -> list
+stm_1_0 :: list -> list -> Bool -> list
+stm_2_0 :: list -> list -> Bool -> list
+stm_3_0 :: list -> list -> Bool -> list
+stm_2_1 :: list -> list -> Bool -> Int -> list
+stm_3_1 :: list -> list -> Bool -> Int -> list
+stm_1_1 :: list -> list -> Bool -> list
+stm_4_0 :: list -> list -> Bool -> list
+stm_4_1 :: list -> list -> Bool -> list
+
+stm_0_0(in, out) -> stm_0_1(in, out, false) | true
+stm_0_1(in, out, x) -> stm_1_0(in, out, x) | true
+stm_1_0(in, out, x) -> stm_2_0(in, out, x) | not(x)
+stm_2_0(in, out, x) -> stm_2_1(in, out, x, 0) | true
+stm_1_0(in, out, x) -> stm_3_0(in, out, x) | not(not(x))
+stm_3_0(in, out, x) -> stm_3_1(in, out, x, 1) | true
+stm_2_1(in, out, x, y) -> stm_1_1(in, out, x) | true
+stm_3_1(in, out, x, z) -> stm_1_1(in, out, x) | true
+stm_1_1(in, out, x) -> stm_4_0(in, out, x) | true
+stm_4_0(in, out, x) -> stm_4_1(in, appendB(x, out), x) | true
+stm_4_1(in, out, x) -> out | true
