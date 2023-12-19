@@ -3,6 +3,7 @@ package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.WhileExpression;
 
 public class WhilePrintInt extends WhilePrint {
+
     public WhilePrintInt(WhileExpression expression) {
         super(expression);
     }
@@ -22,4 +23,5 @@ public class WhilePrintInt extends WhilePrint {
 
         return this.expression.equals(otherPrintBool.expression);
     }
+
 }

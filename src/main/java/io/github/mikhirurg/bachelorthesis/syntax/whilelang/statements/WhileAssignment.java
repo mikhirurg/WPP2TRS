@@ -5,10 +5,11 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
 import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 public class WhileAssignment implements WhileStatement {
-
     private final WhileVar variable;
 
     private final WhileExpression expression;
+
+    private int id = 0;
 
     public WhileAssignment(WhileVar var, WhileExpression expression) {
         this.variable = var;
@@ -42,5 +43,21 @@ public class WhileAssignment implements WhileStatement {
         WhileAssignment otherAssignment = (WhileAssignment) other;
 
         return this.expression.equals(otherAssignment.expression) && this.variable.equals(otherAssignment.variable);
+    }
+
+    @Override
+    public int calculateId(int rootId) {
+        this.id = rootId;
+        return getId();
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 }

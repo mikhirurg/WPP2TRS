@@ -1,4 +1,5 @@
-int n := 45;
+int n := 0;
+readInt(n);
 int x := 0;
 while x * x <= n and not(x * x = n) do (
     x := x + 1

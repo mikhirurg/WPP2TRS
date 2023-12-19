@@ -3,6 +3,7 @@ package io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.WhileExpression;
 
 public class WhilePrintBool extends WhilePrint {
+
     public WhilePrintBool(WhileExpression expression) {
         super(expression);
     }

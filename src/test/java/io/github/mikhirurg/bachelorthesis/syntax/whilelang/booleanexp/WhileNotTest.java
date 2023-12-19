@@ -39,7 +39,7 @@ class WhileNotTest {
     @Test
     void testToString() {
         assertEquals("not(false)", WHILE_NOT_1.toString());
-        assertEquals("not((false V x))", WHILE_NOT_2.toString());
+        assertEquals("not((false \\/ x))", WHILE_NOT_2.toString());
         assertEquals("not((\"abc\" = y))", WHILE_NOT_3.toString());
     }
 

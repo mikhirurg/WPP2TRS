@@ -31,9 +31,9 @@ class WhileVarDeclarationTest {
 
     @Test
     void testToString() {
-        assertEquals("int x := (10 + y)", WHILE_DECLARATION_1.toString());
-        assertEquals("bool b := not(false)", WHILE_DECLARATION_2.toString());
-        assertEquals("string str := \"abc\"", WHILE_DECLARATION_3.toString());
+        assertEquals("Int x := (10 + y)", WHILE_DECLARATION_1.toString());
+        assertEquals("Bool b := not(false)", WHILE_DECLARATION_2.toString());
+        assertEquals("String str := \"abc\"", WHILE_DECLARATION_3.toString());
     }
 
     @Test

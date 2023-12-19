@@ -56,9 +56,9 @@ class WhileAndTest {
 
     @Test
     void testToString() {
-        assertEquals("(true ^ false)", WHILE_AND_1.toString());
-        assertEquals("(true ^ x)", WHILE_AND_2.toString());
-        assertEquals("((false V y) ^ x)", WHILE_AND_3.toString());
+        assertEquals("(true /\\ false)", WHILE_AND_1.toString());
+        assertEquals("(true /\\ x)", WHILE_AND_2.toString());
+        assertEquals("((false \\/ y) /\\ x)", WHILE_AND_3.toString());
     }
 
     @Test

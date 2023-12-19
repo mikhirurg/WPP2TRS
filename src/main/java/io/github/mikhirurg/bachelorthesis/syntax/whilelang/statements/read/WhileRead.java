@@ -6,6 +6,8 @@ import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 public abstract class WhileRead implements WhileStatement {
 
+    private int id;
+
     protected final WhileVar var;
 
     public WhileRead(WhileVar var) {
@@ -21,4 +23,19 @@ public abstract class WhileRead implements WhileStatement {
         trsPrinter.visitRead(this);
     }
 
+    @Override
+    public int calculateId(int rootId) {
+        this.id = rootId;
+        return getId();
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
 }

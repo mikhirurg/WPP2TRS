@@ -9,6 +9,8 @@ public class WhileWhile implements WhileStatement {
 
     private final WhileStatement statement;
 
+    private int id = 0;
+
     public WhileWhile(WhileBooleanExpression condition, WhileStatement statement) {
         this.condition = condition;
         this.statement = statement;
@@ -41,5 +43,22 @@ public class WhileWhile implements WhileStatement {
         WhileWhile otherWhile = (WhileWhile) other;
 
         return this.condition.equals(otherWhile.condition) && this.statement.equals(otherWhile.statement);
+    }
+
+    @Override
+    public int calculateId(int rootId) {
+        this.id = rootId;
+
+        return statement.calculateId(rootId + 1);
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 }

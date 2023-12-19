@@ -4,7 +4,14 @@ import io.github.mikhirurg.bachelorthesis.syntax.SyntaxNode;
 import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 public interface WhileStatement extends SyntaxNode {
+
     String toString();
 
     void acceptTRSPrinter(TRSPrinter trsPrinter);
+
+    int calculateId(int rootId);
+
+    int getId();
+
+    void setId(int id);
 }
