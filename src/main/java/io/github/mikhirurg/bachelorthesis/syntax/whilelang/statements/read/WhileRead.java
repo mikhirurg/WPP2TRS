@@ -23,19 +23,4 @@ public abstract class WhileRead implements WhileStatement {
         trsPrinter.visitRead(this);
     }
 
-    @Override
-    public int calculateId(int rootId) {
-        this.id = rootId;
-        return getId();
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
 }

@@ -9,8 +9,6 @@ public class WhileAssignment implements WhileStatement {
 
     private final WhileExpression expression;
 
-    private int id = 0;
-
     public WhileAssignment(WhileVar var, WhileExpression expression) {
         this.variable = var;
         this.expression = expression;
@@ -45,19 +43,4 @@ public class WhileAssignment implements WhileStatement {
         return this.expression.equals(otherAssignment.expression) && this.variable.equals(otherAssignment.variable);
     }
 
-    @Override
-    public int calculateId(int rootId) {
-        this.id = rootId;
-        return getId();
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
 }

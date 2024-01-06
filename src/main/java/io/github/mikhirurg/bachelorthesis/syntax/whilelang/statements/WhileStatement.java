@@ -9,9 +9,4 @@ public interface WhileStatement extends SyntaxNode {
 
     void acceptTRSPrinter(TRSPrinter trsPrinter);
 
-    int calculateId(int rootId);
-
-    int getId();
-
-    void setId(int id);
 }

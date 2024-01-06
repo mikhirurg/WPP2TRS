@@ -10,8 +10,6 @@ public class WhileVarDeclaration implements WhileStatement {
 
     private final WhileExpression expression;
 
-    private int id = 0;
-
     public WhileVarDeclaration(WhileVar variable, WhileExpression expression) {
         this.variable = variable;
         this.expression = expression;
@@ -47,19 +45,4 @@ public class WhileVarDeclaration implements WhileStatement {
         return this.variable.equals(otherVarDeclaration.variable) && this.expression.equals(otherVarDeclaration.expression);
     }
 
-    @Override
-    public int calculateId(int rootId) {
-        this.id = rootId;
-        return getId();
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
 }

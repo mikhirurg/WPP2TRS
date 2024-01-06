@@ -51,8 +51,6 @@ class TRSPrinterTest {
         WhileStatement p1 = ProgramBuilder.parseProgram(file);
         TRSPrinter printer = new TRSPrinter();
 
-        p1.calculateId(0);
-
         p1.acceptTRSPrinter(printer);
 
         /*System.out.println(printer.getTRSRules()

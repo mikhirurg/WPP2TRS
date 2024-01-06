@@ -11,8 +11,6 @@ public class WhileIf implements WhileStatement {
 
     private final WhileStatement statement2;
 
-    private int id = 0;
-
     public WhileIf(WhileBooleanExpression condition, WhileStatement statement1, WhileStatement statement2) {
         this.condition = condition;
         this.statement1 = statement1;
@@ -39,25 +37,6 @@ public class WhileIf implements WhileStatement {
     @Override
     public void acceptTRSPrinter(TRSPrinter trsPrinter) {
         trsPrinter.visitIf(this);
-    }
-
-    @Override
-    public int calculateId(int rootId) {
-        this.id = rootId;
-        int lastId = statement1.calculateId(rootId + 1);
-        lastId = statement2.calculateId(lastId + 1);
-
-        return lastId;
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override
