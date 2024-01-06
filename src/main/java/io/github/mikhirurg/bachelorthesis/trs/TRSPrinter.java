@@ -5,55 +5,74 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileNot;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrint;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.read.WhileRead;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileListVar;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileType;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.*;
 import org.antlr.v4.runtime.misc.OrderedHashSet;
 
 import java.util.*;
 
 public class TRSPrinter {
-    private static class State {
-        private final Map<WhileVar, Object> vars;
 
+    private static class VariableVector {
+        private final List<WhileExpression> variables;
         private final Map<WhileVar, Integer> position;
 
-        private final List<Integer> ids;
+        public VariableVector() {
+            this.variables = new ArrayList<>();
+            this.position = new HashMap<>();
+        }
 
-        private int i;
+        public VariableVector(VariableVector other) {
+            this.variables = new ArrayList<>(other.variables);
+            this.position = new HashMap<>(other.position);
+        }
+
+        public void addVariable(WhileVar whileVar) {
+            int i = variables.size();
+            variables.add(whileVar);
+            this.position.put(whileVar, i);
+        }
+
+        public List<WhileExpression> substitute(Map<WhileVar, WhileExpression> map) {
+            List<WhileExpression> expressions = new ArrayList<>(variables);
+            for (WhileVar key : map.keySet()) {
+                expressions.set(position.get(key), map.get(key));
+            }
+
+            return expressions;
+        }
+
+        public List<WhileExpression> getVariables() {
+            return variables;
+        }
+    }
+
+    private static class State {
+        private List<TRSRule> rulesList;
+        private VariableVector variableVector;
+        private int id;
 
         public State() {
-            this.vars = new HashMap<>();
-            this.position = new HashMap<>();
-            this.ids = new ArrayList<>();
-            this.i = 0;
+            this.rulesList = new ArrayList<>();
+            this.variableVector = new VariableVector();
+            this.id = 0;
         }
 
-        public State(State other) {
-            this.vars = new HashMap<>(other.vars);
-            this.position = new HashMap<>(other.position);
-            this.ids = new ArrayList<>(other.ids);
-            this.i = other.getI();
+        public void update(List<TRSRule> rulesSet, VariableVector variableVector, int id) {
+            this.rulesList = rulesSet;
+            this.variableVector = variableVector;
+            this.id = id;
         }
 
-        public Map<WhileVar, Integer> getPosition() {
-            return position;
+        public List<TRSRule> getRulesList() {
+            return rulesList;
         }
 
-        public int getI() {
-            return i;
+        public VariableVector getVariableVector() {
+            return variableVector;
         }
 
-        public void setI(int i) {
-            this.i = i;
-        }
-
-        public Map<WhileVar, Object> getVars() {
-            return vars;
-        }
-
-        public List<Integer> getIds() {
-            return ids;
+        public int getId() {
+            return id;
         }
     }
 
@@ -89,9 +108,7 @@ public class TRSPrinter {
                     moveS(consS(str, l)) -> l
                                 
                     """;
-    private State state;
-
-    private final List<TRSRule> trs;
+    private final State state;
 
     private final WhileVar IN = new WhileListVar("in");
 
@@ -99,17 +116,24 @@ public class TRSPrinter {
 
     public TRSPrinter() {
         this.state = new State();
-        this.trs = new ArrayList<>();
+        this.state.variableVector.addVariable(IN);
+        this.state.variableVector.addVariable(OUT);
+    }
 
-        addVariableToSignature(IN, null);
-        addVariableToSignature(OUT, null);
+    public List<TRSTerm> convertToTRSTerms(List<WhileExpression> expressions) {
+        List<TRSTerm> terms = new ArrayList<>();
+        for (WhileExpression expression : expressions) {
+            terms.add(new TRSVariable(expression.toString(), expression.getType().getName()));
+        }
+
+        return terms;
     }
 
     public List<TRSRule> getTRSRules() {
-        List<TRSRule> rules = new ArrayList<>(trs);
+        List<TRSRule> rules = new ArrayList<>(state.rulesList);
+        List<TRSTerm> leftVars = convertToTRSTerms(state.getVariableVector().variables);
 
-        List<TRSTerm> leftVars = buildVars();
-        TRSFunction left = new TRSFunction(((TRSFunction )trs.get(trs.size() - 1).getRight()).getName(), leftVars, WhileType.LIST.getName());
+        TRSFunction left = new TRSFunction("stm_" + state.getId(), leftVars, WhileType.LIST.getName());
         TRSVariable right = new TRSVariable("out", WhileType.LIST.getName());
 
         rules.add(new TRSRule(left, right));
@@ -159,436 +183,376 @@ public class TRSPrinter {
         return builder.toString();
     }
 
-    private void updateVariable(List<TRSTerm> terms, WhileVar var, TRSVariable trsVariable) {
-        terms.set(state.getPosition().get(var), trsVariable);
-    }
-
-    private void addVariableToSignature(WhileVar var, WhileExpression whileExpression) {
-        state.getVars().put(var, whileExpression);
-        state.getPosition().put(var, state.getVars().size() - 1);
-    }
-
-    private List<TRSTerm> buildVars() {
-        List<TRSTerm> vars = new ArrayList<>();
-
-        for (int i = 0; i < state.getVars().size(); i++) {
-            vars.add(null);
-        }
-
-        for (WhileVar var : state.getVars().keySet()) {
-            vars.set(state.getPosition().get(var), new TRSVariable(var.getVarName(), var.getType().getName()));
-        }
-
-        return vars;
-    }
-
     public void visitSkip(WhileSkip skip) {
+        // [[skip]]_{id, x^->} =
+        // ({ stm_{id + 1}[x^->] -> stm_{id + 2}[x^->] },
+        // x^->,
+        // id + 2)
 
-        // 1) Creating left side of the rule:
+        // Creating TRS rule:
+        TRSRule rule = new TRSRule(
+                new TRSFunction(
+                        "stm_" + (state.getId() + 1),
+                        convertToTRSTerms(state.getVariableVector().getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (state.getId() + 2),
+                        convertToTRSTerms(state.getVariableVector().getVariables()),
+                        WhileType.LIST.getName()
+                )
+        );
 
-        // 1.1) Creating name for the left side:
-        String leftName = "stm_" + skip.getId() + "_0";
-
-        // 1.2) Creating arguments for the left side:
-        List<TRSTerm> leftArgs = buildVars();
-
-        // 1.3) Create left term:
-        TRSTerm left = new TRSFunction(leftName, leftArgs, WhileType.LIST.getName());
-
-        // 2) Creating right side of the rule
-
-        // 2.1) Creating name for the right side
-        String rightName = "stm_" + skip.getId() + "_1";
-
-        // 2.2) Creating arguments for the right side
-        List<TRSTerm> rightArgs = buildVars();
-
-        // 2.3) Creating right term
-        TRSTerm right = new TRSFunction(rightName, rightArgs, WhileType.LIST.getName());
-
-        // 3) Adding new rule
-        trs.add(new TRSRule(left, right));
-
-        state.getIds().add(skip.getId());
+        // Updating the state:
+        state.update(List.of(rule), state.getVariableVector(), state.getId() + 2);
     }
 
     public void visitDeclaration(WhileVarDeclaration declaration) {
+        // [[int x := val_int]]_{id, x^->} =
+        // ({ stm_{id + 1}[x^->] -> stm_{id + 2}[x^-> * val_int] [true] },
+        // x^-> * val_int,
+        // id + 2)
 
-        // 1) Creating left side of the rule:
+        // Updating variables:
+        VariableVector vector = new VariableVector(state.getVariableVector());
+        vector.addVariable(declaration.getVariable());
 
-        // 1.1) Creating name for the left side:
-        String leftName = "stm_" + declaration.getId() + "_0";
-
-        // 1.2) Creating arguments for the left side:
-        List<TRSTerm> leftVars = buildVars();
-
-        // 1.3) Create left term:
-        TRSFunction left = new TRSFunction(leftName, leftVars, WhileType.LIST.getName());
-
-        // 2) Creating right side of the rule
-
-        // 2.1) Creating name for the right side
-        String rightName = "stm_" + declaration.getId() + "_1";
-
-        // 2.2) Creating arguments for the right side
-
-        // 2.2.1) Adding variable to the signature
-        addVariableToSignature(declaration.getVariable(), declaration.getExpression());
-
-        // 2.2.2) Creating variables with the information from the state:
-        List<TRSTerm> rightVars = buildVars();
-        updateVariable(rightVars,
-                declaration.getVariable(),
-                new TRSVariable(declaration.getExpression().toString(),
-                        declaration.getVariable().getType().getName())
+        // Creating TRS rule:
+        TRSRule rule = new TRSRule(
+                new TRSFunction(
+                        "stm_" + (state.getId() + 1),
+                        convertToTRSTerms(state.getVariableVector().getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (state.getId() + 2),
+                        convertToTRSTerms(vector.substitute(
+                                Map.of(declaration.getVariable(), declaration.getExpression())
+                        )),
+                        WhileType.LIST.getName()
+                )
         );
 
-        // 2.3) Creating right term
-        TRSFunction right = new TRSFunction(rightName, rightVars, WhileType.LIST.getName());
-
-        // 3) Adding new rule
-        trs.add(new TRSRule(left, right));
-
-        state.getIds().add(declaration.getId());
+        // Updating the state:
+        state.update(List.of(rule), vector, state.getId() + 2);
     }
 
     public void visitAssignment(WhileAssignment assignment) {
-        // 1) Creating left side of the rule:
+        // [[x := val_type]]_{id, y^->} =
+        // ({ stm_{id + 1}[y^->] -> stm_{id + 2}[y'^->] [true] },
+        // y'^->,
+        // id + 2)
 
-        // 1.1) Creating name for the left side:
-        String leftName = "stm_" + assignment.getId() + "_0";
+        // Updating variables:
+        List<WhileExpression> expressions = state.getVariableVector().substitute(
+                Map.of(assignment.getVariable(), assignment.getExpression()));
 
-        // 1.2) Creating arguments for the left side:
-        List<TRSTerm> leftVars = buildVars();
-
-        // 1.3) Create left term:
-        TRSFunction left = new TRSFunction(leftName, leftVars, WhileType.LIST.getName());
-
-        // 2) Creating right side of the rule
-
-        // 2.1) Creating name for the right side
-        String rightName = "stm_" + assignment.getId() + "_1";
-
-        // 2.2) Creating arguments for the right side
-        List<TRSTerm> rightVars = new ArrayList<>(leftVars);
-        updateVariable(rightVars,
-                assignment.getVariable(),
-                new TRSVariable(assignment.getExpression().toString(),
-                        assignment.getVariable().getType().getName())
+        // Creating TRS rule:
+        TRSRule rule = new TRSRule(
+                new TRSFunction(
+                        "stm_" + (state.getId() + 1),
+                        convertToTRSTerms(state.getVariableVector().getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (state.getId() + 2),
+                        convertToTRSTerms(expressions),
+                        WhileType.LIST.getName()
+                )
         );
 
-        // 2.3) Creating right term
-        TRSFunction right = new TRSFunction(rightName, rightVars, WhileType.LIST.getName());
-
-        // 3) Adding new rule
-        trs.add(new TRSRule(left, right));
-
-        state.getIds().add(assignment.getId());
+        // Updating the state:
+        state.update(List.of(rule), state.getVariableVector(), state.getId() + 2);
     }
 
     public void visitPrint(WhilePrint whilePrint) {
+        // [[printType(val_type)]]_{id, y^->} =
+        // ({ stm_{id + 1}[y^->] -> stm_{id + 2}[y'^->] [true] },
+        // y'^->,
+        // id + 2)
 
-        // 1) Creating left side of the rule:
-
-        // 1.1) Creating name for the left side:
-        String leftName = "stm_" + whilePrint.getId() + "_0";
-
-        // 1.2) Creating arguments for the left side:
-        List<TRSTerm> leftVars = buildVars();
-
-        // 1.3) Create left term:
-        TRSTerm left = new TRSFunction(leftName, leftVars, WhileType.LIST.getName());
-
-        // 2) Creating right side of the rule
-
-        // 2.1) Creating name for the right side
-        String rightName = "stm_" + whilePrint.getId() + "_1";
-
-        // 2.2) Creating arguments for the right side
-        List<TRSTerm> rightVars = buildVars();
-
-        String appendType = switch (whilePrint.getExpression().getType()) {
-            case INT -> "appendI";
-            case BOOL -> "appendB";
-            case STRING -> "appendS";
+        // Determining type letter:
+        String type = switch (whilePrint.getExpression().getType()) {
+            case INT -> "I";
+            case BOOL -> "B";
+            case STRING -> "S";
             default -> "";
         };
 
-        updateVariable(rightVars, OUT,
-                new TRSVariable(appendType + "(" + whilePrint.getExpression().toString() +
-                        ", out)", WhileType.LIST.getName())
+        // Updating variables:
+        List<WhileExpression> expressions = state.getVariableVector().substitute(
+                Map.of(OUT, new WhileListVar(
+                        "cons" + type + "(" +
+                                whilePrint.getExpression() + ", " + OUT +
+                                ")"))
         );
 
-        // 2.3) Creating right term
-        TRSTerm right = new TRSFunction(rightName, rightVars, WhileType.LIST.getName());
+        // Creating TRS rule:
+        TRSRule rule = new TRSRule(
+                new TRSFunction(
+                        "stm_" + (state.getId() + 1),
+                        convertToTRSTerms(state.getVariableVector().getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (state.getId() + 2),
+                        convertToTRSTerms(expressions),
+                        WhileType.LIST.getName()
+                )
+        );
 
-        // 3) Adding new rule
-        trs.add(new TRSRule(left, right));
-
-        state.getIds().add(whilePrint.getId());
+        // Updating the state:
+        state.update(List.of(rule), state.getVariableVector(), state.getId() + 2);
     }
 
     public void visitRead(WhileRead whileRead) {
+        // [[x := val_type]]_{id, y^->} =
+        // ({ stm_{id + 1}[y^->] -> stm_{id + 2}[y'^->] [true]},
+        // y'^->,
+        // id + 2)
 
-        // 1) Creating left side of the rule:
+        // Updating variable, based on the reading type:
+        List<WhileExpression> expressions = new ArrayList<>();
+        switch (whileRead.getVariable().getType()) {
+            case INT -> {
+                expressions = state.getVariableVector().substitute(
+                        Map.of(
+                                IN, new WhileListVar("moveI(" + IN + ")"),
+                                whileRead.getVariable(), new WhileIntVar("takeI(" + IN + ")")
+                        )
+                );
+            }
+            case BOOL -> {
+                expressions = state.getVariableVector().substitute(
+                        Map.of(
+                                IN, new WhileListVar("moveB(" + IN + ")"),
+                                whileRead.getVariable(), new WhileBoolVar("takeB(" + IN + ")")
+                        )
+                );
+            }
+            case STRING -> {
+                expressions = state.getVariableVector().substitute(
+                        Map.of(
+                                IN, new WhileListVar("moveS(" + IN + ")"),
+                                whileRead.getVariable(), new WhileStringVar("takeI(" + IN + ")")
+                        )
+                );
+            }
+        }
 
-        // 1.1) Creating name for the left side:
-        String leftName = "stm_" + whileRead.getId() + "_0";
-
-        // 1.2) Creating arguments for the left side:
-        List<TRSTerm> leftVars = buildVars();
-
-        // 1.3) Create left term:
-        TRSTerm left = new TRSFunction(leftName, leftVars, WhileType.LIST.getName());
-
-        // 2) Creating right side of the rule
-
-        // 2.1) Creating name for the right side
-        String rightName = "stm_" + whileRead.getId() + "_1";
-
-        // 2.2) Creating arguments for the right side
-        List<TRSTerm> rightVars = buildVars();
-
-        String takeType = switch (whileRead.getVariable().getType()) {
-            case INT -> "takeI";
-            case BOOL -> "takeB";
-            case STRING -> "takeS";
-            default -> "";
-        };
-
-        String moveType = switch (whileRead.getVariable().getType()) {
-            case INT -> "moveI";
-            case BOOL -> "moveB";
-            case STRING -> "moveS";
-            default -> "";
-        };
-
-        updateVariable(rightVars,
-                whileRead.getVariable(),
-                new TRSVariable(takeType + "(in)",
-                        whileRead.getVariable().getType().getName())
+        // Creating TRS rule:
+        TRSRule rule = new TRSRule(
+                new TRSFunction(
+                        "stm_" + (state.getId() + 1),
+                        convertToTRSTerms(state.getVariableVector().getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (state.getId() + 2),
+                        convertToTRSTerms(expressions),
+                        WhileType.LIST.getName()
+                )
         );
 
-        updateVariable(rightVars, IN,
-                new TRSVariable(moveType + "(in)", WhileType.LIST.getName())
-        );
-
-        // 2.3) Creating right term
-        TRSTerm right = new TRSFunction(rightName, rightVars, WhileType.LIST.getName());
-
-        // 3) Adding new rule
-        trs.add(new TRSRule(left, right));
-
-        state.getIds().add(whileRead.getId());
+        // Updating the state:
+        state.update(List.of(rule), state.getVariableVector(), state.getId() + 2);
     }
 
     public void visitComp(WhileComp comp) {
+        // [[S1; S2]]_{id, x^->} =
+        // (R1 U
+        // { stm_{id'}[x^-> * y^->] -> stm_{id' + 1}[x^-> * y^->] [true] } U
+        // R2,
+        // x^-> * y^->,
+        // id'')
 
-        // Exploring statement 1:
+        // Explore first statement:
         comp.getStatement1().acceptTRSPrinter(this);
 
-        // 1) Creating left side of the rule:
+        List<TRSRule> rules1 = new ArrayList<>(state.getRulesList());
+        VariableVector vars1 = new VariableVector(state.getVariableVector());
+        int id1 = state.getId();
 
-        // 1.1) Creating name for the left side:
-        String leftName = ((TRSFunction) trs.get(trs.size() - 1).getRight()).getName();
+        state.update(new ArrayList<>(), vars1, state.getId());
 
-        // 1.2) Creating arguments for the left side:
-        List<TRSTerm> leftVars = buildVars();
-
-        // 1.3) Create left term:
-        TRSTerm left = new TRSFunction(leftName, leftVars, WhileType.LIST.getName());
-
-        // Saving the size of the LCTRS rules array:
-        int trsSize = trs.size();
-
-        // Exploring statement 2:
+        // Explore second statement:
         comp.getStatement2().acceptTRSPrinter(this);
 
-        // 2) Creating right side of the rule
+        List<TRSRule> rules2 = new ArrayList<>(state.getRulesList());
 
-        // 2.1) Creating name for the right side
-        String rightName = ((TRSFunction) trs.get(trsSize).getLeft()).getName();
+        // Create the composition of rules:
+        List<TRSRule> compRulesList = new ArrayList<>(rules1);
+        compRulesList.add(new TRSRule(
+                new TRSFunction(
+                        "stm_" + id1,
+                        convertToTRSTerms(vars1.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (id1 + 1),
+                        convertToTRSTerms(vars1.getVariables()),
+                        WhileType.LIST.getName()
+                )
+        ));
+        compRulesList.addAll(rules2);
 
-        // 2.2) Creating arguments for the right side
-        List<TRSTerm> rightVars = new ArrayList<>(leftVars);
-
-        // 2.3) Creating right term
-        TRSTerm right = new TRSFunction(rightName, rightVars, WhileType.LIST.getName());
-
-        // 3) Adding new rule
-        trs.add(trsSize, new TRSRule(left, right));
+        // Updating the state:
+        state.update(compRulesList, state.getVariableVector(), state.getId());
     }
 
     public void visitIf(WhileIf whileIf) {
+        // [[if b then S1 else S2]]_{id, x^->} =
+        // ({ stm_{id + 1}[x^->] -> stm_{id + 2}[x^->] [b] } U
+        // R1 U
+        // { stm_{id + 1}[x^->] -> stm_{id' + 1}[x^->] [neg(b)] } U
+        // R2 U
+        // { stm_{id'}[x^-> * y^->] -> stm_{id'' + 1}[x^->] [true] } U
+        // { stm_{id''}[x^-> * z^->] -> stm_{id'' + 1}[x^->] [true] },
+        // x^->,
+        // id'' + 1)
 
-        // Copying the state:
-        State stateCopy = new State(state);
+        VariableVector oldVector = new VariableVector(state.getVariableVector());
+        int id = state.getId();
 
-        // Case 1: if condition evaluates to true
+        state.update(state.getRulesList(), state.getVariableVector(), state.getId() + 1);
 
-        // 1.1) Creating name for the left side:
-        String leftName = "stm_" + whileIf.getId() + "_0";
-
-        // 1.2) Creating arguments for the left side:
-        List<TRSTerm> leftVars = buildVars();
-
-        // 1.3) Create left term:
-        TRSTerm left = new TRSFunction(leftName, leftVars, WhileType.LIST.getName());
-
-        // Saving size of the trs list:
-        int trsSize = trs.size();
-
-        // Exploring statement 1:
         whileIf.getStatement1().acceptTRSPrinter(this);
 
-        // Saving arguments after statement 1:
-        List<TRSTerm> varsStatement1 = buildVars();
+        List<TRSRule> rules1 = new ArrayList<>(state.getRulesList());
+        VariableVector vector1 = new VariableVector(state.getVariableVector());
+        int id1 = state.getId();
 
-        // Saving name of the right function symbol for the last rule
-        String rightNameStatement1 = ((TRSFunction) trs.get(trs.size() - 1).getRight()).getName();
+        state.update(new ArrayList<>(), oldVector, state.getId());
 
-        trs.add(trsSize,
-                new TRSRule(left,
-                        trs.get(trsSize).getLeft(),
-                        whileIf.getCondition().toString()));
-
-        state = new State(stateCopy);
-
-        // Case 2: if condition evaluates to false
-
-        // Saving size of the trs list:
-        trsSize = trs.size();
-
-        // Exploring statement 2:
         whileIf.getStatement2().acceptTRSPrinter(this);
 
-        // Saving arguments after statement 2:
-        List<TRSTerm> varsStatement2 = buildVars();
+        List<TRSRule> rules2 = new ArrayList<>(state.getRulesList());
+        VariableVector vector2 = new VariableVector(state.getVariableVector());
+        int id2 = state.getId();
 
-        // Saving name of the right function symbol for the last rule
-        String rightNameStatement2 = ((TRSFunction) trs.get(trs.size() - 1).getRight()).getName();
-
-        trs.add(trsSize,
-                new TRSRule(left,
-                        trs.get(trsSize).getLeft(),
-                        new WhileNot(whileIf.getCondition()).toString()
-                        ));
-
-        state = new State(stateCopy);
-
-        // Adding finalizing rules (to move from the sub-statement of the if)
-        trs.add(new TRSRule(
-           new TRSFunction(rightNameStatement1, varsStatement1, WhileType.LIST.getName()),
-           new TRSFunction("stm_" + whileIf.getId() + "_1", buildVars(), WhileType.LIST.getName())
+        List<TRSRule> ifRulesList = new ArrayList<>();
+        // { stm_{id + 1}[x^->] -> stm_{id + 2}[x^->] [b] }
+        ifRulesList.add(new TRSRule(
+                new TRSFunction("stm_" + (id + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction("stm_" + (id + 2),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                whileIf.getCondition().toString()
+        ));
+        // R1
+        ifRulesList.addAll(rules1);
+        // { stm_{id + 1}[x^->] -> stm_{id' + 1}[x^->] [neg(b)] }
+        ifRulesList.add(new TRSRule(
+                new TRSFunction("stm_" + (id + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction("stm_" + (id1 + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new WhileNot(whileIf.getCondition()).toString()
+        ));
+        // R2
+        ifRulesList.addAll(rules2);
+        // { stm_{id'}[x^-> * y^->] -> stm_{id'' + 1}[x^->] [true] }
+        ifRulesList.add(new TRSRule(
+                new TRSFunction("stm_" + id1,
+                        convertToTRSTerms(vector1.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction("stm_" + (id2 + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                )
+        ));
+        // { stm_{id''}[x^-> * z^->] -> stm_{id'' + 1}[x^->] [true] }
+        ifRulesList.add(new TRSRule(
+                new TRSFunction("stm_" + id2,
+                        convertToTRSTerms(vector2.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction("stm_" + (id2 + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                )
         ));
 
-        trs.add(new TRSRule(
-                new TRSFunction(rightNameStatement2, varsStatement2, WhileType.LIST.getName()),
-                new TRSFunction("stm_" + whileIf.getId() + "_1", buildVars(), WhileType.LIST.getName())
-        ));
-
-        state.setI(whileIf.getId());
+        // Updating the state:
+        state.update(ifRulesList, oldVector, id2 + 1);
     }
 
 
     public void visitWhile(WhileWhile whileWhile) {
+        // [[while b do S]]_{id, x^->} =
+        // ({ stm_{id + 1}[x^->] -> stm_{id + 2}[x^->] [b] } U
+        // R1 U
+        // { stm_{id'}[x^-> * y^->] -> stm_{id + 1}[x^->] [true] } U
+        // { stm_{id + 1}[x^->] -> stm_{id' + 1}[x^->] [not(b)] },
+        // x^->,
+        // id' + 1)
 
-        // Saving size of the id array, to make the connection:
-        int idsSize = state.getIds().size();
+        VariableVector oldVector = new VariableVector(state.getVariableVector());
+        int id = state.getId();
 
-        // Saving arguments:
-        List<TRSTerm> vars = buildVars();
-
-        // Copying the state:
-        State stateCopy = new State(state);
-
-        // Saving the size of the LCTRS array
-        int trsSize = trs.size();
-
-        // Exploring While statement:
-        // [[S]]_{id_1, x^->}
+        state.update(state.getRulesList(), state.getVariableVector(), state.getId() + 1);
 
         whileWhile.getStatement().acceptTRSPrinter(this);
 
-        // Case 1: while condition evaluates to true
-        // stm_{id, 0}[x^->] -> ([[S]]_{id_1, x^->}[0].l) [b]
+        List<TRSRule> rules1 = state.getRulesList();
+        VariableVector vector1 = state.getVariableVector();
+        int id1 = state.getId();
 
-        // 1) Creating left side of the rule:
+        List<TRSRule> whileRulesList = new ArrayList<>();
+        // { stm_{id + 1}[x^->] -> stm_{id + 2}[x^->] [b] }
+        whileRulesList.add(new TRSRule(
+                new TRSFunction(
+                        "stm_" + (id + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (id + 2),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                whileWhile.getCondition().toString()
+        ));
+        // R1
+        whileRulesList.addAll(rules1);
+        // { stm_{id'}[x^-> * y^->] -> stm_{id + 1}[x^->] [true] }
+        whileRulesList.add(new TRSRule(
+                new TRSFunction(
+                        "stm_" + id1,
+                        convertToTRSTerms(vector1.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (id + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                )
+        ));
+        // { stm_{id + 1}[x^->] -> stm_{id' + 1}[x^->] [not(b)] }
+        whileRulesList.add(new TRSRule(
+                new TRSFunction(
+                        "stm_" + (id + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new TRSFunction(
+                        "stm_" + (id1 + 1),
+                        convertToTRSTerms(oldVector.getVariables()),
+                        WhileType.LIST.getName()
+                ),
+                new WhileNot(whileWhile.getCondition()).toString()
+        ));
 
-        // 1.1) Creating name for the left side:
-        String leftName = "stm_" + whileWhile.getId() + "_0";
-
-        // 1.2) Creating arguments for the left side:
-        List<TRSTerm> leftVars = new ArrayList<>(vars);
-
-        // 1.3) Create left term:
-        TRSTerm left = new TRSFunction(leftName, leftVars, WhileType.LIST.getName());
-
-        // 2) Creating right side of the rule (while condition evaluates to true)
-
-        // 2.1) Creating name for the right side
-        String rightName = "stm_" + state.getIds().get(idsSize) + "_0";
-
-        // 2.2) Creating arguments for the right side
-        List<TRSTerm> rightVars = new ArrayList<>(leftVars);
-
-        // 2.3) Creating right term
-        TRSTerm right = new TRSFunction(rightName, rightVars, WhileType.LIST.getName());
-
-        // 3) Adding new rule
-        trs.add(trsSize, new TRSRule(left, right, whileWhile.getCondition().toString()));
-
-        // Case 2: while condition evaluates to false
-        // stm_{id, 0}[x^->] -> stm_{id, 0}[x^->] [not b]
-
-        // 1) Creating left side of the rule:
-
-        // It is already created (left)
-
-        // 2) Creating right side of the rule:
-
-        // 2.1) Creating name for the right side
-        rightName = "stm_" + whileWhile.getId() + "_1";
-
-        // 2.2) Creating arguments for the right side
-        rightVars = new ArrayList<>(vars);
-
-        // 2.3) Creating right term
-        right = new TRSFunction(rightName, rightVars, WhileType.LIST.getName());
-
-        // 3) Adding new rule
-        TRSRule exitWhile = new TRSRule(left, right, new WhileNot(whileWhile.getCondition()).toString());
-
-        // "Looping" the while statement:
-        // stm_{}
-
-        // Saving the old left side from the while condition rules:
-        TRSTerm oldLeft = left;
-
-        // 1) Creating left side of the rule:
-
-        // 1.1) Creating name for the left side:
-        leftName = ((TRSFunction) trs.get(trs.size() - 1).getRight()).getName();
-
-        // 1.2) Creating arguments for the left side:
-        leftVars = buildVars();
-
-        // 1.3) Create left term:
-        left = new TRSFunction(leftName, leftVars, WhileType.LIST.getName());
-
-        // 2) Creating right side of the rule
-        // Already created (oldLeft)
-        right = oldLeft;
-
-        // 3) Adding new rule
-        trs.add(new TRSRule(left, right));
-
-        // Add rule to exit from While
-        trs.add(exitWhile);
-
-        state = new State(stateCopy);
-        state.setI(whileWhile.getId());
+        // Updating the state:
+        state.update(whileRulesList, oldVector, id1 + 1);
     }
-
-
 }

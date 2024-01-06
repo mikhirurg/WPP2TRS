@@ -27,72 +27,72 @@ moveI(consI(i, l)) -> l
 moveB(consB(b, l)) -> l
 moveS(consS(str, l)) -> l
 
-stm_0_0 :: list -> list -> list
-stm_0_1 :: list -> list -> Int -> list
-stm_1_0 :: list -> list -> Int -> list
-stm_1_1 :: list -> list -> Int -> list
-stm_2_0 :: list -> list -> Int -> list
-stm_2_1 :: list -> list -> Int -> Int -> list
-stm_3_0 :: list -> list -> Int -> Int -> list
-stm_3_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_4_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_5_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_5_1 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_6_0 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_7_0 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_7_1 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_6_1 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_8_0 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_9_0 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_10_0 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_9_1 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_10_1 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_8_1 :: list -> list -> Int -> Int -> Bool -> Int -> list
-stm_4_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_11_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_11_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_12_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_12_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_13_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_14_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_15_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_14_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_15_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_13_1 :: list -> list -> Int -> Int -> Bool -> list
+stm_1 :: list -> list -> list
+stm_2 :: list -> list -> Int -> list
+stm_3 :: list -> list -> Int -> list
+stm_4 :: list -> list -> Int -> list
+stm_5 :: list -> list -> Int -> list
+stm_6 :: list -> list -> Int -> Int -> list
+stm_7 :: list -> list -> Int -> Int -> list
+stm_8 :: list -> list -> Int -> Int -> Bool -> list
+stm_9 :: list -> list -> Int -> Int -> Bool -> list
+stm_10 :: list -> list -> Int -> Int -> Bool -> list
+stm_11 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_12 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_13 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_14 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_15 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_16 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_17 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_19 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_18 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_20 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_21 :: list -> list -> Int -> Int -> Bool -> Int -> list
+stm_22 :: list -> list -> Int -> Int -> Bool -> list
+stm_23 :: list -> list -> Int -> Int -> Bool -> list
+stm_24 :: list -> list -> Int -> Int -> Bool -> list
+stm_25 :: list -> list -> Int -> Int -> Bool -> list
+stm_26 :: list -> list -> Int -> Int -> Bool -> list
+stm_27 :: list -> list -> Int -> Int -> Bool -> list
+stm_28 :: list -> list -> Int -> Int -> Bool -> list
+stm_30 :: list -> list -> Int -> Int -> Bool -> list
+stm_29 :: list -> list -> Int -> Int -> Bool -> list
+stm_31 :: list -> list -> Int -> Int -> Bool -> list
+stm_32 :: list -> list -> Int -> Int -> Bool -> list
 
-stm_0_0(in, out) -> stm_0_1(in, out, 0) | true
-stm_0_1(in, out, n) -> stm_1_0(in, out, n) | true
-stm_1_0(in, out, n) -> stm_1_1(moveI(in), out, takeI(in)) | true
-stm_1_1(in, out, n) -> stm_2_0(in, out, n) | true
-stm_2_0(in, out, n) -> stm_2_1(in, out, n, 2) | true
-stm_2_1(in, out, n, i) -> stm_3_0(in, out, n, i) | true
-stm_3_0(in, out, n, i) -> stm_3_1(in, out, n, i, true) | true
-stm_3_1(in, out, n, i, isPrime) -> stm_4_0(in, out, n, i, isPrime) | true
-stm_4_0(in, out, n, i, isPrime) -> stm_5_0(in, out, n, i, isPrime) | (((i * i) <= n) /\ isPrime)
-stm_5_0(in, out, n, i, isPrime) -> stm_5_1(in, out, n, i, isPrime, n) | true
-stm_5_1(in, out, n, i, isPrime, m) -> stm_6_0(in, out, n, i, isPrime, m) | true
-stm_6_0(in, out, n, i, isPrime, m) -> stm_7_0(in, out, n, i, isPrime, m) | not((m <= 0))
-stm_7_0(in, out, n, i, isPrime, m) -> stm_7_1(in, out, n, i, isPrime, (m - i)) | true
-stm_7_1(in, out, n, i, isPrime, m) -> stm_6_0(in, out, n, i, isPrime, m) | true
-stm_6_0(in, out, n, i, isPrime, m) -> stm_6_1(in, out, n, i, isPrime, m) | not(not((m <= 0)))
-stm_6_1(in, out, n, i, isPrime, m) -> stm_8_0(in, out, n, i, isPrime, m) | true
-stm_8_0(in, out, n, i, isPrime, m) -> stm_9_0(in, out, n, i, isPrime, m) | (m = 0)
-stm_9_0(in, out, n, i, isPrime, m) -> stm_9_1(in, out, n, i, false, m) | true
-stm_8_0(in, out, n, i, isPrime, m) -> stm_10_0(in, out, n, i, isPrime, m) | not((m = 0))
-stm_10_0(in, out, n, i, isPrime, m) -> stm_10_1(in, out, n, (i + 1), isPrime, m) | true
-stm_9_1(in, out, n, i, isPrime, m) -> stm_8_1(in, out, n, i, isPrime, m) | true
-stm_10_1(in, out, n, i, isPrime, m) -> stm_8_1(in, out, n, i, isPrime, m) | true
-stm_8_1(in, out, n, i, isPrime, m) -> stm_4_0(in, out, n, i, isPrime) | true
-stm_4_0(in, out, n, i, isPrime) -> stm_4_1(in, out, n, i, isPrime) | not((((i * i) <= n) /\ isPrime))
-stm_4_1(in, out, n, i, isPrime) -> stm_11_0(in, out, n, i, isPrime) | true
-stm_11_0(in, out, n, i, isPrime) -> stm_11_1(in, appendS("The given number ", out), n, i, isPrime) | true
-stm_11_1(in, out, n, i, isPrime) -> stm_12_0(in, out, n, i, isPrime) | true
-stm_12_0(in, out, n, i, isPrime) -> stm_12_1(in, appendI(n, out), n, i, isPrime) | true
-stm_12_1(in, out, n, i, isPrime) -> stm_13_0(in, out, n, i, isPrime) | true
-stm_13_0(in, out, n, i, isPrime) -> stm_14_0(in, out, n, i, isPrime) | isPrime
-stm_14_0(in, out, n, i, isPrime) -> stm_14_1(in, appendS(" is prime\n", out), n, i, isPrime) | true
-stm_13_0(in, out, n, i, isPrime) -> stm_15_0(in, out, n, i, isPrime) | not(isPrime)
-stm_15_0(in, out, n, i, isPrime) -> stm_15_1(in, appendS(" is not prime\n", out), n, i, isPrime) | true
-stm_14_1(in, out, n, i, isPrime) -> stm_13_1(in, out, n, i, isPrime) | true
-stm_15_1(in, out, n, i, isPrime) -> stm_13_1(in, out, n, i, isPrime) | true
-stm_13_1(in, out, n, i, isPrime) -> out | true
+stm_1(in, out) -> stm_2(in, out, 0) | true
+stm_2(in, out, n) -> stm_3(in, out, n) | true
+stm_3(in, out, n) -> stm_4(moveI(in), out, takeI(in)) | true
+stm_4(in, out, n) -> stm_5(in, out, n) | true
+stm_5(in, out, n) -> stm_6(in, out, n, 2) | true
+stm_6(in, out, n, i) -> stm_7(in, out, n, i) | true
+stm_7(in, out, n, i) -> stm_8(in, out, n, i, true) | true
+stm_8(in, out, n, i, isPrime) -> stm_9(in, out, n, i, isPrime) | true
+stm_9(in, out, n, i, isPrime) -> stm_10(in, out, n, i, isPrime) | (((i * i) <= n) /\ isPrime)
+stm_10(in, out, n, i, isPrime) -> stm_11(in, out, n, i, isPrime, n) | true
+stm_11(in, out, n, i, isPrime, m) -> stm_12(in, out, n, i, isPrime, m) | true
+stm_12(in, out, n, i, isPrime, m) -> stm_13(in, out, n, i, isPrime, m) | not((m <= 0))
+stm_13(in, out, n, i, isPrime, m) -> stm_14(in, out, n, i, isPrime, (m - i)) | true
+stm_14(in, out, n, i, isPrime, m) -> stm_12(in, out, n, i, isPrime, m) | true
+stm_12(in, out, n, i, isPrime, m) -> stm_15(in, out, n, i, isPrime, m) | not(not((m <= 0)))
+stm_15(in, out, n, i, isPrime, m) -> stm_16(in, out, n, i, isPrime, m) | true
+stm_16(in, out, n, i, isPrime, m) -> stm_17(in, out, n, i, isPrime, m) | (m = 0)
+stm_17(in, out, n, i, isPrime, m) -> stm_18(in, out, n, i, false, m) | true
+stm_16(in, out, n, i, isPrime, m) -> stm_19(in, out, n, i, isPrime, m) | not((m = 0))
+stm_19(in, out, n, i, isPrime, m) -> stm_20(in, out, n, (i + 1), isPrime, m) | true
+stm_18(in, out, n, i, isPrime, m) -> stm_21(in, out, n, i, isPrime, m) | true
+stm_20(in, out, n, i, isPrime, m) -> stm_21(in, out, n, i, isPrime, m) | true
+stm_21(in, out, n, i, isPrime, m) -> stm_9(in, out, n, i, isPrime) | true
+stm_9(in, out, n, i, isPrime) -> stm_22(in, out, n, i, isPrime) | not((((i * i) <= n) /\ isPrime))
+stm_22(in, out, n, i, isPrime) -> stm_23(in, out, n, i, isPrime) | true
+stm_23(in, out, n, i, isPrime) -> stm_24(in, consS("The given number ", out), n, i, isPrime) | true
+stm_24(in, out, n, i, isPrime) -> stm_25(in, out, n, i, isPrime) | true
+stm_25(in, out, n, i, isPrime) -> stm_26(in, consI(n, out), n, i, isPrime) | true
+stm_26(in, out, n, i, isPrime) -> stm_27(in, out, n, i, isPrime) | true
+stm_27(in, out, n, i, isPrime) -> stm_28(in, out, n, i, isPrime) | isPrime
+stm_28(in, out, n, i, isPrime) -> stm_29(in, consS(" is prime\n", out), n, i, isPrime) | true
+stm_27(in, out, n, i, isPrime) -> stm_30(in, out, n, i, isPrime) | not(isPrime)
+stm_30(in, out, n, i, isPrime) -> stm_31(in, consS(" is not prime\n", out), n, i, isPrime) | true
+stm_29(in, out, n, i, isPrime) -> stm_32(in, out, n, i, isPrime) | true
+stm_31(in, out, n, i, isPrime) -> stm_32(in, out, n, i, isPrime) | true
+stm_32(in, out, n, i, isPrime) -> out | true

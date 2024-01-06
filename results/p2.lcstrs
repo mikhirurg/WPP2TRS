@@ -27,25 +27,25 @@ moveI(consI(i, l)) -> l
 moveB(consB(b, l)) -> l
 moveS(consS(str, l)) -> l
 
-stm_0_0 :: list -> list -> list
-stm_0_1 :: list -> list -> Bool -> list
-stm_1_0 :: list -> list -> Bool -> list
-stm_2_0 :: list -> list -> Bool -> list
-stm_3_0 :: list -> list -> Bool -> list
-stm_2_1 :: list -> list -> Bool -> Int -> list
-stm_3_1 :: list -> list -> Bool -> Int -> list
-stm_1_1 :: list -> list -> Bool -> list
-stm_4_0 :: list -> list -> Bool -> list
-stm_4_1 :: list -> list -> Bool -> list
+stm_1 :: list -> list -> list
+stm_2 :: list -> list -> Bool -> list
+stm_3 :: list -> list -> Bool -> list
+stm_4 :: list -> list -> Bool -> list
+stm_6 :: list -> list -> Bool -> list
+stm_5 :: list -> list -> Bool -> Int -> list
+stm_7 :: list -> list -> Bool -> Int -> list
+stm_8 :: list -> list -> Bool -> list
+stm_9 :: list -> list -> Bool -> list
+stm_10 :: list -> list -> Bool -> list
 
-stm_0_0(in, out) -> stm_0_1(in, out, false) | true
-stm_0_1(in, out, x) -> stm_1_0(in, out, x) | true
-stm_1_0(in, out, x) -> stm_2_0(in, out, x) | not(x)
-stm_2_0(in, out, x) -> stm_2_1(in, out, x, 0) | true
-stm_1_0(in, out, x) -> stm_3_0(in, out, x) | not(not(x))
-stm_3_0(in, out, x) -> stm_3_1(in, out, x, 1) | true
-stm_2_1(in, out, x, y) -> stm_1_1(in, out, x) | true
-stm_3_1(in, out, x, z) -> stm_1_1(in, out, x) | true
-stm_1_1(in, out, x) -> stm_4_0(in, out, x) | true
-stm_4_0(in, out, x) -> stm_4_1(in, appendB(x, out), x) | true
-stm_4_1(in, out, x) -> out | true
+stm_1(in, out) -> stm_2(in, out, false) | true
+stm_2(in, out, x) -> stm_3(in, out, x) | true
+stm_3(in, out, x) -> stm_4(in, out, x) | not(x)
+stm_4(in, out, x) -> stm_5(in, out, x, 0) | true
+stm_3(in, out, x) -> stm_6(in, out, x) | not(not(x))
+stm_6(in, out, x) -> stm_7(in, out, x, 1) | true
+stm_5(in, out, x, y) -> stm_8(in, out, x) | true
+stm_7(in, out, x, z) -> stm_8(in, out, x) | true
+stm_8(in, out, x) -> stm_9(in, out, x) | true
+stm_9(in, out, x) -> stm_10(in, consB(x, out), x) | true
+stm_10(in, out, x) -> out | true

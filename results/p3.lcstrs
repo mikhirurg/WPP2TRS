@@ -27,29 +27,29 @@ moveI(consI(i, l)) -> l
 moveB(consB(b, l)) -> l
 moveS(consS(str, l)) -> l
 
-stm_0_0 :: list -> list -> list
-stm_0_1 :: list -> list -> Int -> list
-stm_1_0 :: list -> list -> Int -> list
-stm_2_0 :: list -> list -> Int -> list
-stm_2_1 :: list -> list -> Int -> Int -> list
-stm_3_0 :: list -> list -> Int -> Int -> list
-stm_3_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_4_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_4_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_5_0 :: list -> list -> Int -> Int -> Bool -> list
-stm_5_1 :: list -> list -> Int -> Int -> Bool -> list
-stm_1_1 :: list -> list -> Int -> list
+stm_1 :: list -> list -> list
+stm_2 :: list -> list -> Int -> list
+stm_3 :: list -> list -> Int -> list
+stm_4 :: list -> list -> Int -> list
+stm_5 :: list -> list -> Int -> Int -> list
+stm_6 :: list -> list -> Int -> Int -> list
+stm_7 :: list -> list -> Int -> Int -> Bool -> list
+stm_8 :: list -> list -> Int -> Int -> Bool -> list
+stm_9 :: list -> list -> Int -> Int -> Bool -> list
+stm_10 :: list -> list -> Int -> Int -> Bool -> list
+stm_11 :: list -> list -> Int -> Int -> Bool -> list
+stm_12 :: list -> list -> Int -> list
 
-stm_0_0(in, out) -> stm_0_1(in, out, 0) | true
-stm_0_1(in, out, y) -> stm_1_0(in, out, y) | true
-stm_1_0(in, out, y) -> stm_2_0(in, out, y) | (y <= 5)
-stm_2_0(in, out, y) -> stm_2_1(in, out, y, 2) | true
-stm_2_1(in, out, y, x) -> stm_3_0(in, out, y, x) | true
-stm_3_0(in, out, y, x) -> stm_3_1(in, out, y, x, true) | true
-stm_3_1(in, out, y, x, b) -> stm_4_0(in, out, y, x, b) | true
-stm_4_0(in, out, y, x, b) -> stm_4_1(in, out, (y + 1), x, b) | true
-stm_4_1(in, out, y, x, b) -> stm_5_0(in, out, y, x, b) | true
-stm_5_0(in, out, y, x, b) -> stm_5_1(in, appendS("Done!", out), y, x, b) | true
-stm_5_1(in, out, y, x, b) -> stm_1_0(in, out, y) | true
-stm_1_0(in, out, y) -> stm_1_1(in, out, y) | not((y <= 5))
-stm_1_1(in, out, y) -> out | true
+stm_1(in, out) -> stm_2(in, out, 0) | true
+stm_2(in, out, y) -> stm_3(in, out, y) | true
+stm_3(in, out, y) -> stm_4(in, out, y) | (y <= 5)
+stm_4(in, out, y) -> stm_5(in, out, y, 2) | true
+stm_5(in, out, y, x) -> stm_6(in, out, y, x) | true
+stm_6(in, out, y, x) -> stm_7(in, out, y, x, true) | true
+stm_7(in, out, y, x, b) -> stm_8(in, out, y, x, b) | true
+stm_8(in, out, y, x, b) -> stm_9(in, out, (y + 1), x, b) | true
+stm_9(in, out, y, x, b) -> stm_10(in, out, y, x, b) | true
+stm_10(in, out, y, x, b) -> stm_11(in, consS("Done!", out), y, x, b) | true
+stm_11(in, out, y, x, b) -> stm_3(in, out, y) | true
+stm_3(in, out, y) -> stm_12(in, out, y) | not((y <= 5))
+stm_12(in, out, y) -> out | true

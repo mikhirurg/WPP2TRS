@@ -27,16 +27,16 @@ moveI(consI(i, l)) -> l
 moveB(consB(b, l)) -> l
 moveS(consS(str, l)) -> l
 
-stm_0_0 :: list -> list -> list
-stm_0_1 :: list -> list -> Int -> list
-stm_1_0 :: list -> list -> Int -> list
-stm_1_1 :: list -> list -> Int -> Int -> list
-stm_2_0 :: list -> list -> Int -> Int -> list
-stm_2_1 :: list -> list -> Int -> Int -> Int -> list
+stm_1 :: list -> list -> list
+stm_2 :: list -> list -> Int -> list
+stm_3 :: list -> list -> Int -> list
+stm_4 :: list -> list -> Int -> Int -> list
+stm_5 :: list -> list -> Int -> Int -> list
+stm_6 :: list -> list -> Int -> Int -> Int -> list
 
-stm_0_0(in, out) -> stm_0_1(in, out, 0) | true
-stm_0_1(in, out, a) -> stm_1_0(in, out, a) | true
-stm_1_0(in, out, a) -> stm_1_1(in, out, a, 1) | true
-stm_1_1(in, out, a, b) -> stm_2_0(in, out, a, b) | true
-stm_2_0(in, out, a, b) -> stm_2_1(in, out, a, b, (a - b)) | true
-stm_2_1(in, out, a, b, y) -> out | true
+stm_1(in, out) -> stm_2(in, out, 0) | true
+stm_2(in, out, a) -> stm_3(in, out, a) | true
+stm_3(in, out, a) -> stm_4(in, out, a, 1) | true
+stm_4(in, out, a, b) -> stm_5(in, out, a, b) | true
+stm_5(in, out, a, b) -> stm_6(in, out, a, b, (a - b)) | true
+stm_6(in, out, a, b, y) -> out | true

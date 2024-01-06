@@ -27,29 +27,29 @@ moveI(consI(i, l)) -> l
 moveB(consB(b, l)) -> l
 moveS(consS(str, l)) -> l
 
-stm_0_0 :: list -> list -> list
-stm_0_1 :: list -> list -> Int -> list
-stm_1_0 :: list -> list -> Int -> list
-stm_1_1 :: list -> list -> Int -> list
-stm_2_0 :: list -> list -> Int -> list
-stm_2_1 :: list -> list -> Int -> Int -> list
-stm_3_0 :: list -> list -> Int -> Int -> list
-stm_4_0 :: list -> list -> Int -> Int -> list
-stm_4_1 :: list -> list -> Int -> Int -> list
-stm_3_1 :: list -> list -> Int -> Int -> list
-stm_5_0 :: list -> list -> Int -> Int -> list
-stm_5_1 :: list -> list -> Int -> Int -> list
+stm_1 :: list -> list -> list
+stm_2 :: list -> list -> Int -> list
+stm_3 :: list -> list -> Int -> list
+stm_4 :: list -> list -> Int -> list
+stm_5 :: list -> list -> Int -> list
+stm_6 :: list -> list -> Int -> Int -> list
+stm_7 :: list -> list -> Int -> Int -> list
+stm_8 :: list -> list -> Int -> Int -> list
+stm_9 :: list -> list -> Int -> Int -> list
+stm_10 :: list -> list -> Int -> Int -> list
+stm_11 :: list -> list -> Int -> Int -> list
+stm_12 :: list -> list -> Int -> Int -> list
 
-stm_0_0(in, out) -> stm_0_1(in, out, 0) | true
-stm_0_1(in, out, n) -> stm_1_0(in, out, n) | true
-stm_1_0(in, out, n) -> stm_1_1(moveI(in), out, takeI(in)) | true
-stm_1_1(in, out, n) -> stm_2_0(in, out, n) | true
-stm_2_0(in, out, n) -> stm_2_1(in, out, n, 0) | true
-stm_2_1(in, out, n, x) -> stm_3_0(in, out, n, x) | true
-stm_3_0(in, out, n, x) -> stm_4_0(in, out, n, x) | (((x * x) <= n) /\ not(((x * x) = n)))
-stm_4_0(in, out, n, x) -> stm_4_1(in, out, n, (x + 1)) | true
-stm_4_1(in, out, n, x) -> stm_3_0(in, out, n, x) | true
-stm_3_0(in, out, n, x) -> stm_3_1(in, out, n, x) | not((((x * x) <= n) /\ not(((x * x) = n))))
-stm_3_1(in, out, n, x) -> stm_5_0(in, out, n, x) | true
-stm_5_0(in, out, n, x) -> stm_5_1(in, appendI(x, out), n, x) | true
-stm_5_1(in, out, n, x) -> out | true
+stm_1(in, out) -> stm_2(in, out, 0) | true
+stm_2(in, out, n) -> stm_3(in, out, n) | true
+stm_3(in, out, n) -> stm_4(moveI(in), out, takeI(in)) | true
+stm_4(in, out, n) -> stm_5(in, out, n) | true
+stm_5(in, out, n) -> stm_6(in, out, n, 0) | true
+stm_6(in, out, n, x) -> stm_7(in, out, n, x) | true
+stm_7(in, out, n, x) -> stm_8(in, out, n, x) | (((x * x) <= n) /\ not(((x * x) = n)))
+stm_8(in, out, n, x) -> stm_9(in, out, n, (x + 1)) | true
+stm_9(in, out, n, x) -> stm_7(in, out, n, x) | true
+stm_7(in, out, n, x) -> stm_10(in, out, n, x) | not((((x * x) <= n) /\ not(((x * x) = n))))
+stm_10(in, out, n, x) -> stm_11(in, out, n, x) | true
+stm_11(in, out, n, x) -> stm_12(in, consI(x, out), n, x) | true
+stm_12(in, out, n, x) -> out | true

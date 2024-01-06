@@ -27,12 +27,12 @@ moveI(consI(i, l)) -> l
 moveB(consB(b, l)) -> l
 moveS(consS(str, l)) -> l
 
-stm_0_0 :: list -> list -> list
-stm_0_1 :: list -> list -> list
-stm_1_0 :: list -> list -> list
-stm_1_1 :: list -> list -> list
+stm_1 :: list -> list -> list
+stm_2 :: list -> list -> list
+stm_3 :: list -> list -> list
+stm_4 :: list -> list -> list
 
-stm_0_0(in, out) -> stm_0_1(in, appendI(10, out)) | true
-stm_0_1(in, out) -> stm_1_0(in, out) | true
-stm_1_0(in, out) -> stm_1_1(in, appendB(true, out)) | true
-stm_1_1(in, out) -> out | true
+stm_1(in, out) -> stm_2(in, consI(10, out)) | true
+stm_2(in, out) -> stm_3(in, out) | true
+stm_3(in, out) -> stm_4(in, consB(true, out)) | true
+stm_4(in, out) -> out | true

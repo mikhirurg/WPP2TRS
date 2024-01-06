@@ -27,69 +27,69 @@ moveI(consI(i, l)) -> l
 moveB(consB(b, l)) -> l
 moveS(consS(str, l)) -> l
 
-stm_0_0 :: list -> list -> list
-stm_0_1 :: list -> list -> Int -> list
-stm_1_0 :: list -> list -> Int -> list
-stm_1_1 :: list -> list -> Int -> Int -> list
-stm_2_0 :: list -> list -> Int -> Int -> list
-stm_2_1 :: list -> list -> Int -> Int -> Int -> list
-stm_3_0 :: list -> list -> Int -> Int -> Int -> list
-stm_3_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_4_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_5_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_5_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_6_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_6_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_4_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_7_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_7_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_8_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_8_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_9_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_9_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_10_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_10_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_11_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_11_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_12_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_12_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_13_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_13_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_14_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_14_1 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_15_0 :: list -> list -> Int -> Int -> Int -> Int -> list
-stm_15_1 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_1 :: list -> list -> list
+stm_2 :: list -> list -> Int -> list
+stm_3 :: list -> list -> Int -> list
+stm_4 :: list -> list -> Int -> Int -> list
+stm_5 :: list -> list -> Int -> Int -> list
+stm_6 :: list -> list -> Int -> Int -> Int -> list
+stm_7 :: list -> list -> Int -> Int -> Int -> list
+stm_8 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_9 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_10 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_11 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_12 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_13 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_14 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_15 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_16 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_17 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_18 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_19 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_20 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_21 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_22 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_23 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_24 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_25 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_26 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_27 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_28 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_29 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_30 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_31 :: list -> list -> Int -> Int -> Int -> Int -> list
+stm_32 :: list -> list -> Int -> Int -> Int -> Int -> list
 
-stm_0_0(in, out) -> stm_0_1(in, out, 2) | true
-stm_0_1(in, out, x) -> stm_1_0(in, out, x) | true
-stm_1_0(in, out, x) -> stm_1_1(in, out, x, 8) | true
-stm_1_1(in, out, x, n) -> stm_2_0(in, out, x, n) | true
-stm_2_0(in, out, x, n) -> stm_2_1(in, out, x, n, 1) | true
-stm_2_1(in, out, x, n, result) -> stm_3_0(in, out, x, n, result) | true
-stm_3_0(in, out, x, n, result) -> stm_3_1(in, out, x, n, result, n) | true
-stm_3_1(in, out, x, n, result, counter) -> stm_4_0(in, out, x, n, result, counter) | true
-stm_4_0(in, out, x, n, result, counter) -> stm_5_0(in, out, x, n, result, counter) | (1 <= counter)
-stm_5_0(in, out, x, n, result, counter) -> stm_5_1(in, out, x, n, (result * x), counter) | true
-stm_5_1(in, out, x, n, result, counter) -> stm_6_0(in, out, x, n, result, counter) | true
-stm_6_0(in, out, x, n, result, counter) -> stm_6_1(in, out, x, n, result, (counter - 1)) | true
-stm_6_1(in, out, x, n, result, counter) -> stm_4_0(in, out, x, n, result, counter) | true
-stm_4_0(in, out, x, n, result, counter) -> stm_4_1(in, out, x, n, result, counter) | not((1 <= counter))
-stm_4_1(in, out, x, n, result, counter) -> stm_7_0(in, out, x, n, result, counter) | true
-stm_7_0(in, out, x, n, result, counter) -> stm_7_1(in, appendS("x^n, (where:", out), x, n, result, counter) | true
-stm_7_1(in, out, x, n, result, counter) -> stm_8_0(in, out, x, n, result, counter) | true
-stm_8_0(in, out, x, n, result, counter) -> stm_8_1(in, appendS(" x = ", out), x, n, result, counter) | true
-stm_8_1(in, out, x, n, result, counter) -> stm_9_0(in, out, x, n, result, counter) | true
-stm_9_0(in, out, x, n, result, counter) -> stm_9_1(in, appendI(x, out), x, n, result, counter) | true
-stm_9_1(in, out, x, n, result, counter) -> stm_10_0(in, out, x, n, result, counter) | true
-stm_10_0(in, out, x, n, result, counter) -> stm_10_1(in, appendS(", n = ", out), x, n, result, counter) | true
-stm_10_1(in, out, x, n, result, counter) -> stm_11_0(in, out, x, n, result, counter) | true
-stm_11_0(in, out, x, n, result, counter) -> stm_11_1(in, appendI(n, out), x, n, result, counter) | true
-stm_11_1(in, out, x, n, result, counter) -> stm_12_0(in, out, x, n, result, counter) | true
-stm_12_0(in, out, x, n, result, counter) -> stm_12_1(in, appendS(")", out), x, n, result, counter) | true
-stm_12_1(in, out, x, n, result, counter) -> stm_13_0(in, out, x, n, result, counter) | true
-stm_13_0(in, out, x, n, result, counter) -> stm_13_1(in, appendS(" = ", out), x, n, result, counter) | true
-stm_13_1(in, out, x, n, result, counter) -> stm_14_0(in, out, x, n, result, counter) | true
-stm_14_0(in, out, x, n, result, counter) -> stm_14_1(in, appendI(result, out), x, n, result, counter) | true
-stm_14_1(in, out, x, n, result, counter) -> stm_15_0(in, out, x, n, result, counter) | true
-stm_15_0(in, out, x, n, result, counter) -> stm_15_1(in, appendS("\n", out), x, n, result, counter) | true
-stm_15_1(in, out, x, n, result, counter) -> out | true
+stm_1(in, out) -> stm_2(in, out, 2) | true
+stm_2(in, out, x) -> stm_3(in, out, x) | true
+stm_3(in, out, x) -> stm_4(in, out, x, 8) | true
+stm_4(in, out, x, n) -> stm_5(in, out, x, n) | true
+stm_5(in, out, x, n) -> stm_6(in, out, x, n, 1) | true
+stm_6(in, out, x, n, result) -> stm_7(in, out, x, n, result) | true
+stm_7(in, out, x, n, result) -> stm_8(in, out, x, n, result, n) | true
+stm_8(in, out, x, n, result, counter) -> stm_9(in, out, x, n, result, counter) | true
+stm_9(in, out, x, n, result, counter) -> stm_10(in, out, x, n, result, counter) | (1 <= counter)
+stm_10(in, out, x, n, result, counter) -> stm_11(in, out, x, n, (result * x), counter) | true
+stm_11(in, out, x, n, result, counter) -> stm_12(in, out, x, n, result, counter) | true
+stm_12(in, out, x, n, result, counter) -> stm_13(in, out, x, n, result, (counter - 1)) | true
+stm_13(in, out, x, n, result, counter) -> stm_9(in, out, x, n, result, counter) | true
+stm_9(in, out, x, n, result, counter) -> stm_14(in, out, x, n, result, counter) | not((1 <= counter))
+stm_14(in, out, x, n, result, counter) -> stm_15(in, out, x, n, result, counter) | true
+stm_15(in, out, x, n, result, counter) -> stm_16(in, consS("x^n, (where:", out), x, n, result, counter) | true
+stm_16(in, out, x, n, result, counter) -> stm_17(in, out, x, n, result, counter) | true
+stm_17(in, out, x, n, result, counter) -> stm_18(in, consS(" x = ", out), x, n, result, counter) | true
+stm_18(in, out, x, n, result, counter) -> stm_19(in, out, x, n, result, counter) | true
+stm_19(in, out, x, n, result, counter) -> stm_20(in, consI(x, out), x, n, result, counter) | true
+stm_20(in, out, x, n, result, counter) -> stm_21(in, out, x, n, result, counter) | true
+stm_21(in, out, x, n, result, counter) -> stm_22(in, consS(", n = ", out), x, n, result, counter) | true
+stm_22(in, out, x, n, result, counter) -> stm_23(in, out, x, n, result, counter) | true
+stm_23(in, out, x, n, result, counter) -> stm_24(in, consI(n, out), x, n, result, counter) | true
+stm_24(in, out, x, n, result, counter) -> stm_25(in, out, x, n, result, counter) | true
+stm_25(in, out, x, n, result, counter) -> stm_26(in, consS(")", out), x, n, result, counter) | true
+stm_26(in, out, x, n, result, counter) -> stm_27(in, out, x, n, result, counter) | true
+stm_27(in, out, x, n, result, counter) -> stm_28(in, consS(" = ", out), x, n, result, counter) | true
+stm_28(in, out, x, n, result, counter) -> stm_29(in, out, x, n, result, counter) | true
+stm_29(in, out, x, n, result, counter) -> stm_30(in, consI(result, out), x, n, result, counter) | true
+stm_30(in, out, x, n, result, counter) -> stm_31(in, out, x, n, result, counter) | true
+stm_31(in, out, x, n, result, counter) -> stm_32(in, consS("\n", out), x, n, result, counter) | true
+stm_32(in, out, x, n, result, counter) -> out | true
