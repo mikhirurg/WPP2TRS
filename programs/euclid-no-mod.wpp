@@ -2,22 +2,21 @@ int a := 0;
 int b := 0;
 readInt(a);
 readInt(b);
-if b <= a then (
-    int tmp := a;
-    a := b;
-    b := tmp
-) else ( skip );
 int aCopy := a;
 int bCopy := b;
-while not((a % b) <= 0) do (
-    int tmp := a % b;
-    a := b;
-    b := tmp
+while not(b = 0) do (
+    int t := b;
+    int tmp := a;
+    while b <= tmp do (
+        tmp := tmp - b
+    );
+    b := tmp;
+    a := t
 );
 printString("The gcd value for integers ");
 printInt(aCopy);
 printString(" ");
 printInt(bCopy);
 printString(" is: \n");
-printInt(b);
+printInt(a);
 printString("\n")

@@ -17,11 +17,11 @@ stm: TYPE VAR ':=' expr
     | stm ';' stm
     ;
 
-branchOne : stm ;
+branchOne : '(' stm ')' ;
 
-branchTwo : stm ;
+branchTwo : '(' stm ')' ;
 
-aexp: aexp MULT aexp
+aexp: aexp (MULT | DIV | MOD) aexp
     | aexp (MINUS | PLUS) aexp
     | atom
     ;
@@ -60,7 +60,10 @@ STRING: '"' .*? '"';
 
 PLUS: '+' ;
 MINUS: '-';
+
 MULT: '*';
+DIV: '/';
+MOD: '%';
 
 NOT: 'not' ;
 AND: 'and' ;

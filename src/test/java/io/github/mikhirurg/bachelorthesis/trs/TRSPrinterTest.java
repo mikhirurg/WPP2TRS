@@ -240,6 +240,11 @@ class TRSPrinterTest {
     }
 
     @Test
+    void testProgramEuclidNoMod() throws IOException {
+        test(new File("programs/euclid-no-mod.wpp"));
+    }
+
+    @Test
     void testProgramEuclid() throws IOException {
         test(new File("programs/euclid.wpp"));
     }

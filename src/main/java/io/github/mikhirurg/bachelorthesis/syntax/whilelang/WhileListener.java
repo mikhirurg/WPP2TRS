@@ -256,6 +256,14 @@ public class WhileListener extends WhileBaseListener {
             WhileArithmeticExpression right = arithmeticStack.pop();
             WhileArithmeticExpression left = arithmeticStack.pop();
             arithmeticStack.add(new WhileMult(left, right));
+        } else if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals("/")) {
+            WhileArithmeticExpression right = arithmeticStack.pop();
+            WhileArithmeticExpression left = arithmeticStack.pop();
+            arithmeticStack.add(new WhileDiv(left, right));
+        } else if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals("%")) {
+            WhileArithmeticExpression right = arithmeticStack.pop();
+            WhileArithmeticExpression left = arithmeticStack.pop();
+            arithmeticStack.add(new WhileMod(left, right));
         } else if (ctx.children.size() == 3 && ctx.children.get(1).getText().equals("+")) {
             WhileArithmeticExpression right = arithmeticStack.pop();
             WhileArithmeticExpression left = arithmeticStack.pop();
