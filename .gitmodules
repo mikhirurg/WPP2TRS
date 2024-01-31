@@ -1,0 +1,3 @@
+[submodule "cora"]
+	path = cora
+	url = https://github.com/hezzel/cora.git

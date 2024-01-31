@@ -7,10 +7,10 @@ while i * i <= n and isPrime do (
     while not(m <= 0) do (
         m := m - i
     );
-    if m = 0 then isPrime := false
-    else i := i + 1
+    if m = 0 then ( isPrime := false )
+    else ( i := i + 1 )
 );
 printString("The given number ");
 printInt(n);
-if isPrime then printString(" is prime\n")
-else printString(" is not prime\n")
+if isPrime then ( printString(" is prime\n") )
+else ( printString(" is not prime\n") )
