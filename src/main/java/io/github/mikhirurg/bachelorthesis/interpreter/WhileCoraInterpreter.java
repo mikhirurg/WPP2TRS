@@ -11,8 +11,6 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileType;
 import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 public class WhileCoraInterpreter {
 

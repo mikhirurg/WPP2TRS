@@ -1,6 +1,8 @@
 int a := 0;
 int b := 0;
+printString("Enter a:\n");
 readInt(a);
+printString("Enter b:\n");
 readInt(b);
 if b <= a then (
     int tmp := a;

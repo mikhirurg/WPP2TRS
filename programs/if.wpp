@@ -1,0 +1,4 @@
+if not(1 = 1) then
+    ( skip )
+else
+   ( printInt(1) )
