@@ -1,7 +1,8 @@
 package io.github.mikhirurg.bachelorthesis.interpreter;
 
 import cora.reader.CoraInputReader;
-import cora.rewriting.TRS;
+import cora.reduction.Reducer;
+import cora.trs.TRS;
 import cora.terms.Term;
 import cora.terms.position.Position;
 import io.github.mikhirurg.bachelorthesis.ProgramBuilder;
@@ -126,8 +127,10 @@ public class WhileCoraInterpreter {
 
         Term term = CoraInputReader.readTerm(startingTerm, trs);
 
+        Reducer reducer = new Reducer(trs);
+
         do {
-            term = trs.leftmostInnermostReduce(term);
+            term = reducer.leftmostInnermostReduce(term);
             if (term != null) {
 
                 if (isExplicit) {
