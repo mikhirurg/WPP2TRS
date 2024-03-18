@@ -41,6 +41,13 @@ java {
     }
 }
 
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
 group = "io.github.mikhirurg"
 version = "1.0-SNAPSHOT"
 description = "BachelorThesis"

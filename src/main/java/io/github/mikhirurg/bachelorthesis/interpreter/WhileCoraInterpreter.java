@@ -115,74 +115,81 @@ public class WhileCoraInterpreter {
 
         WhileCoraInterpreter interpreter = new WhileCoraInterpreter(System.in, System.out);
 
-        WhileStatement program = ProgramBuilder.parseProgram(new File(args[0]));
+        try {
+            WhileStatement program = ProgramBuilder.parseProgram(new File(args[0]));
 
-        TRSPrinter printer = new TRSPrinter();
+            TRSPrinter printer = new TRSPrinter();
 
-        program.acceptTRSPrinter(printer);
+            program.acceptTRSPrinter(printer);
 
-        TRS trs = fromString(printer.getRulesRepresentation());
+            TRS trs = fromString(printer.getRulesRepresentation());
 
-        String startingTerm = "stm_1(nil, nil)";
+            String startingTerm = "stm_1(nil, nil)";
 
-        Term term = CoraInputReader.readTerm(startingTerm, trs);
+            Term term = CoraInputReader.readTerm(startingTerm, trs);
 
-        Reducer reducer = new Reducer(trs);
+            Reducer reducer = new Reducer(trs);
 
-        do {
-            term = reducer.leftmostInnermostReduce(term);
-            if (term != null) {
+            do {
+                term = reducer.leftmostInnermostReduce(term);
+                if (term != null) {
 
-                if (isExplicit) {
-                    System.out.println("⇒ " + term);
-                }
+                    if (isExplicit) {
+                        System.out.println("⇒ " + term);
+                    }
 
-                if (term.numberArguments() > 0) {
-                    String inputType = testInput(term.queryArgument(1).toString());
-                    if (inputType != null) {
-                        switch (inputType) {
-                            case "I" -> interpreter.readInt();
-                            case "B" -> interpreter.readBool();
-                            case "S" -> interpreter.readString();
-                        }
+                    if (term.numberArguments() > 0) {
+                        String inputType = testInput(term.queryArgument(1).toString());
+                        if (inputType != null) {
+                            switch (inputType) {
+                                case "I" -> interpreter.readInt();
+                                case "B" -> interpreter.readBool();
+                                case "S" -> interpreter.readString();
+                            }
 
-                        term = term.replaceSubterm(term.queryPositions(false).get(1),
-                                CoraInputReader.readTerm("move" + inputType + "(cons" + inputType + "(" + interpreter.input + ", nil))", trs));
+                            term = term.replaceSubterm(term.queryPositions(false).get(1),
+                                    CoraInputReader.readTerm("move" + inputType + "(cons" + inputType + "(" + interpreter.input + ", nil))", trs));
 
-                        for (Position position : term.queryPositions(false)) {
-                            if (term.querySubterm(position).toString().equals("take" + inputType + "(nil)")) {
-                                String value = interpreter.input.toString();
-                                if (inputType.equals("S")) {
-                                    value = "\"" + value + "\"";
+                            for (Position position : term.queryPositions(false)) {
+                                if (term.querySubterm(position).toString().equals("take" + inputType + "(nil)")) {
+                                    String value = interpreter.input.toString();
+                                    if (inputType.equals("S")) {
+                                        value = "\"" + value + "\"";
+                                    }
+                                    term = term.replaceSubterm(position,
+                                            CoraInputReader.readTerm("take" + inputType + "(cons" + inputType + "(" + value + ", nil))", trs));
+                                    break;
                                 }
-                                term = term.replaceSubterm(position,
-                                        CoraInputReader.readTerm("take" + inputType + "(cons" + inputType + "(" + value + ", nil))", trs));
-                                break;
-                            }
-                        }
-                    }
-
-                    String outputTermStr = term.queryArgument(2).toString();
-                    String outputType = testOutput(outputTermStr);
-                    if (outputType != null) {
-                        String valToPrint = term.queryArgument(2).toString().substring(6, outputTermStr.lastIndexOf( ", nil"));
-                        switch (outputType) {
-                            case "I" -> {
-                                interpreter.writeInt(Integer.parseInt(valToPrint));
-                            }
-                            case "B" -> {
-                                interpreter.writeBool(Boolean.parseBoolean(valToPrint));
-                            }
-                            case "S" -> {
-                                interpreter.writeString(valToPrint.substring(1, valToPrint.length() - 1)
-                                        .replaceAll("\\\\n", "\n"));
                             }
                         }
 
-                        term = term.replaceSubterm(term.queryPositions(false).get(3), CoraInputReader.readTerm("nil", trs));
+                        String outputTermStr = term.queryArgument(2).toString();
+                        String outputType = testOutput(outputTermStr);
+                        if (outputType != null) {
+                            String valToPrint = term.queryArgument(2).toString().substring(6, outputTermStr.lastIndexOf(", nil"));
+                            switch (outputType) {
+                                case "I" -> {
+                                    interpreter.writeInt(Integer.parseInt(valToPrint));
+                                }
+                                case "B" -> {
+                                    interpreter.writeBool(Boolean.parseBoolean(valToPrint));
+                                }
+                                case "S" -> {
+                                    interpreter.writeString(valToPrint.substring(1, valToPrint.length() - 1)
+                                            .replaceAll("\\\\n", "\n")
+                                            .replaceAll("\\\\\"", "\"")
+                                            .replaceAll("\\\\", "\\")
+                                    );
+                                }
+                            }
+
+                            term = term.replaceSubterm(term.queryPositions(false).get(3), CoraInputReader.readTerm("nil", trs));
+                        }
                     }
                 }
-            }
-        } while (term != null);
+            } while (term != null);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

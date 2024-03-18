@@ -1,4 +1,4 @@
-package io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp.exceptions;
+package io.github.mikhirurg.bachelorthesis.syntax.whilelang.exceptions;
 
 public class WhileArithmeticException extends RuntimeException {
     public WhileArithmeticException(String message) {

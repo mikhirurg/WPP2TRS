@@ -11,7 +11,7 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileStrin
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileBoolVar;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileIntVar;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileStringVar;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.exceptions.VariableNotDeclaredException;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.exceptions.VariableNotDeclaredException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-package io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp.exceptions;
+package io.github.mikhirurg.bachelorthesis.syntax.whilelang.exceptions;
 
 public class UninitializedVariableException extends WhileArithmeticException {
     public UninitializedVariableException(String var) {
