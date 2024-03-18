@@ -220,14 +220,8 @@ public class WhileListener extends WhileBaseListener {
     }
 
     @Override
-    public void exitBranchOne(WhileParser.BranchOneContext ctx) {
-        super.exitBranchOne(ctx);
-        variables = new HashMap<>(tmpVariables);
-    }
-
-    @Override
-    public void exitBranchTwo(WhileParser.BranchTwoContext ctx) {
-        super.exitBranchTwo(ctx);
+    public void exitNestedStm(WhileParser.NestedStmContext ctx) {
+        super.exitNestedStm(ctx);
         variables = new HashMap<>(tmpVariables);
     }
 

@@ -27,6 +27,26 @@ public interface WhileListener extends ParseTreeListener {
 	 */
 	void exitStm(WhileParser.StmContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link WhileParser#nestedStm}.
+	 * @param ctx the parse tree
+	 */
+	void enterNestedStm(WhileParser.NestedStmContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WhileParser#nestedStm}.
+	 * @param ctx the parse tree
+	 */
+	void exitNestedStm(WhileParser.NestedStmContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WhileParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition(WhileParser.ConditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WhileParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition(WhileParser.ConditionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link WhileParser#unaryStm}.
 	 * @param ctx the parse tree
 	 */
@@ -36,26 +56,6 @@ public interface WhileListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitUnaryStm(WhileParser.UnaryStmContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link WhileParser#declareStm}.
-	 * @param ctx the parse tree
-	 */
-	void enterDeclareStm(WhileParser.DeclareStmContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link WhileParser#declareStm}.
-	 * @param ctx the parse tree
-	 */
-	void exitDeclareStm(WhileParser.DeclareStmContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link WhileParser#assignStm}.
-	 * @param ctx the parse tree
-	 */
-	void enterAssignStm(WhileParser.AssignStmContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link WhileParser#assignStm}.
-	 * @param ctx the parse tree
-	 */
-	void exitAssignStm(WhileParser.AssignStmContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link WhileParser#skipStm}.
 	 * @param ctx the parse tree
@@ -137,26 +137,6 @@ public interface WhileListener extends ParseTreeListener {
 	 */
 	void exitIfStm(WhileParser.IfStmContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link WhileParser#branchOne}.
-	 * @param ctx the parse tree
-	 */
-	void enterBranchOne(WhileParser.BranchOneContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link WhileParser#branchOne}.
-	 * @param ctx the parse tree
-	 */
-	void exitBranchOne(WhileParser.BranchOneContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link WhileParser#branchTwo}.
-	 * @param ctx the parse tree
-	 */
-	void enterBranchTwo(WhileParser.BranchTwoContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link WhileParser#branchTwo}.
-	 * @param ctx the parse tree
-	 */
-	void exitBranchTwo(WhileParser.BranchTwoContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link WhileParser#whileStm}.
 	 * @param ctx the parse tree
 	 */
@@ -167,26 +147,6 @@ public interface WhileListener extends ParseTreeListener {
 	 */
 	void exitWhileStm(WhileParser.WhileStmContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link WhileParser#whileBody}.
-	 * @param ctx the parse tree
-	 */
-	void enterWhileBody(WhileParser.WhileBodyContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link WhileParser#whileBody}.
-	 * @param ctx the parse tree
-	 */
-	void exitWhileBody(WhileParser.WhileBodyContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link WhileParser#condition}.
-	 * @param ctx the parse tree
-	 */
-	void enterCondition(WhileParser.ConditionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link WhileParser#condition}.
-	 * @param ctx the parse tree
-	 */
-	void exitCondition(WhileParser.ConditionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link WhileParser#blockStm}.
 	 * @param ctx the parse tree
 	 */
@@ -196,6 +156,26 @@ public interface WhileListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBlockStm(WhileParser.BlockStmContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WhileParser#declareStm}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclareStm(WhileParser.DeclareStmContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WhileParser#declareStm}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclareStm(WhileParser.DeclareStmContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link WhileParser#assignStm}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignStm(WhileParser.AssignStmContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link WhileParser#assignStm}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignStm(WhileParser.AssignStmContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link WhileParser#expr}.
 	 * @param ctx the parse tree

@@ -1,0 +1,7 @@
+if (true) then
+    if true then
+        if true then
+            printInt(1)
+        else skip
+    else skip
+else skip

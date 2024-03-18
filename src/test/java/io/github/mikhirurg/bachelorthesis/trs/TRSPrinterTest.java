@@ -263,4 +263,9 @@ class TRSPrinterTest {
     void testNearestSquareRoot() throws IOException {
         test(new File("programs/square_root.wpp"));
     }
+
+    @Test
+    void testNestedIfs() throws IOException {
+        test(new File("programs/nestedifs.wpp"));
+    }
 }

@@ -22,23 +22,23 @@ public interface WhileVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStm(WhileParser.StmContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link WhileParser#nestedStm}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNestedStm(WhileParser.NestedStmContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WhileParser#condition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondition(WhileParser.ConditionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link WhileParser#unaryStm}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitUnaryStm(WhileParser.UnaryStmContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link WhileParser#declareStm}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDeclareStm(WhileParser.DeclareStmContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link WhileParser#assignStm}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignStm(WhileParser.AssignStmContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WhileParser#skipStm}.
 	 * @param ctx the parse tree
@@ -88,41 +88,29 @@ public interface WhileVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIfStm(WhileParser.IfStmContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link WhileParser#branchOne}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBranchOne(WhileParser.BranchOneContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link WhileParser#branchTwo}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBranchTwo(WhileParser.BranchTwoContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link WhileParser#whileStm}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitWhileStm(WhileParser.WhileStmContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link WhileParser#whileBody}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWhileBody(WhileParser.WhileBodyContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link WhileParser#condition}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCondition(WhileParser.ConditionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link WhileParser#blockStm}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBlockStm(WhileParser.BlockStmContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WhileParser#declareStm}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclareStm(WhileParser.DeclareStmContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link WhileParser#assignStm}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignStm(WhileParser.AssignStmContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link WhileParser#expr}.
 	 * @param ctx the parse tree

@@ -40,6 +40,30 @@ public class WhileBaseListener implements WhileListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNestedStm(WhileParser.NestedStmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNestedStm(WhileParser.NestedStmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCondition(WhileParser.ConditionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCondition(WhileParser.ConditionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterUnaryStm(WhileParser.UnaryStmContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -47,30 +71,6 @@ public class WhileBaseListener implements WhileListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitUnaryStm(WhileParser.UnaryStmContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDeclareStm(WhileParser.DeclareStmContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDeclareStm(WhileParser.DeclareStmContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAssignStm(WhileParser.AssignStmContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAssignStm(WhileParser.AssignStmContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -172,30 +172,6 @@ public class WhileBaseListener implements WhileListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBranchOne(WhileParser.BranchOneContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBranchOne(WhileParser.BranchOneContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterBranchTwo(WhileParser.BranchTwoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBranchTwo(WhileParser.BranchTwoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterWhileStm(WhileParser.WhileStmContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -208,30 +184,6 @@ public class WhileBaseListener implements WhileListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWhileBody(WhileParser.WhileBodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitWhileBody(WhileParser.WhileBodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCondition(WhileParser.ConditionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCondition(WhileParser.ConditionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBlockStm(WhileParser.BlockStmContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -239,6 +191,30 @@ public class WhileBaseListener implements WhileListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBlockStm(WhileParser.BlockStmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDeclareStm(WhileParser.DeclareStmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclareStm(WhileParser.DeclareStmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssignStm(WhileParser.AssignStmContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignStm(WhileParser.AssignStmContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
