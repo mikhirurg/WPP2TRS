@@ -33,7 +33,7 @@ public class ProgramBuilder {
         StringBuilder builder = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
-            builder.append(line).append(" ");
+            builder.append(line).append("\n");
         }
 
         return parseProgram(builder.toString());

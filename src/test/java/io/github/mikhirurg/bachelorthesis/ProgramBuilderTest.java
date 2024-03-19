@@ -7,6 +7,7 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileLeq;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileOr;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileTrueConst;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintInt;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileBoolVar;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileIntVar;
@@ -228,6 +229,138 @@ class ProgramBuilderTest {
                 new WhileComp(
                         new WhileSkip(),
                         new WhileSkip()),
+                new WhileSkip()
+        ), statement);
+    }
+
+    @Test
+    void testNestedIfs() {
+        String program = """
+                if (true) then
+                    if true then
+                        if true then
+                            printInt(1)
+                        else skip
+                    else skip
+                else skip
+                """;
+
+        WhileStatement statement = ProgramBuilder.parseProgram(program);
+
+        assertEquals(
+                new WhileIf(
+                        new WhileTrueConst(),
+                        new WhileIf(
+                                new WhileTrueConst(),
+                                new WhileIf(
+                                        new WhileTrueConst(),
+                                        new WhilePrintInt(new WhileConst("1")),
+                                        new WhileSkip()
+                                ), new WhileSkip()
+                        ), new WhileSkip()
+                ), statement);
+    }
+
+    @Test
+    void testNestedWhiles() {
+        String program = """
+                while true do
+                    while false do
+                        while true do
+                            skip
+                """;
+
+        WhileStatement statement = ProgramBuilder.parseProgram(program);
+
+        assertEquals(
+                new WhileWhile(
+                        new WhileTrueConst(),
+                        new WhileWhile(
+                                new WhileFalseConst(),
+                                new WhileWhile(
+                                        new WhileTrueConst(),
+                                        new WhileSkip()
+                                )
+                        )
+                ), statement);
+    }
+
+    @Test
+    void testNestedIfsAndWhiles() {
+        String program = """
+                while true do
+                    if true then
+                        while false do
+                            skip
+                    else
+                        if false then
+                            while false do
+                                skip
+                        else
+                            skip
+                """;
+
+        WhileStatement statement = ProgramBuilder.parseProgram(program);
+
+        assertEquals(
+                new WhileWhile(
+                        new WhileTrueConst(),
+                        new WhileIf(
+                                new WhileTrueConst(),
+                                new WhileWhile(
+                                        new WhileFalseConst(),
+                                        new WhileSkip()
+                                ),
+                                new WhileIf(
+                                        new WhileFalseConst(),
+                                        new WhileWhile(
+                                                new WhileFalseConst(),
+                                                new WhileSkip()
+                                        ),
+                                        new WhileSkip()
+                                )
+                        )
+                ), statement);
+    }
+
+    @Test
+    void testWhileMultipleStmBody() {
+        String program = """
+                while true do (
+                    skip;
+                    skip;
+                    skip
+                )
+                """;
+
+        WhileStatement statement = ProgramBuilder.parseProgram(program);
+
+        assertEquals(new WhileWhile(
+                new WhileTrueConst(),
+                new WhileComp(
+                        new WhileComp(
+                                new WhileSkip(),
+                                new WhileSkip()
+                        ),
+                        new WhileSkip()
+                )
+        ), statement);
+    }
+
+    @Test
+    void testCompWhileSingleStm() {
+        String program = """
+                while true do
+                    skip;
+                skip
+                """;
+        WhileStatement statement = ProgramBuilder.parseProgram(program);
+
+        assertEquals(new WhileComp(
+                new WhileWhile(
+                        new WhileTrueConst(),
+                        new WhileSkip()
+                ),
                 new WhileSkip()
         ), statement);
     }
