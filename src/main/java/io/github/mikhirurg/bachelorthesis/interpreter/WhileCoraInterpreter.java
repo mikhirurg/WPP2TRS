@@ -73,7 +73,7 @@ public class WhileCoraInterpreter {
 
     private static String getExtension(String filename) {
         int i = filename.lastIndexOf('.');
-        if (i >= 0) return filename.substring(i+1);
+        if (i >= 0) return filename.substring(i + 1);
         return "";
     }
 
@@ -99,6 +99,23 @@ public class WhileCoraInterpreter {
             return "S";
         }
         return null;
+    }
+
+    private static Term reduceTermToFinalForm(Term term, Reducer reducer) {
+        Term oldTerm;
+        do {
+            oldTerm = term;
+            term = reducer.leftmostInnermostReduce(term);
+        } while (term != null);
+
+        return oldTerm;
+    }
+
+    private static Position findArgumentPos(Term term, int argNum) {
+        return term.queryPositions(false)
+                .stream()
+                .filter(e -> (argNum + ".ε").equals(e.toString()))
+                .findAny().orElse(null);
     }
 
     public static void main(String[] args) throws IOException {
@@ -163,10 +180,13 @@ public class WhileCoraInterpreter {
                             }
                         }
 
-                        String outputTermStr = term.queryArgument(2).toString();
-                        String outputType = testOutput(outputTermStr);
+                        Position outputListPos = findArgumentPos(term, 2);
+                        Term outputListTerm = term.querySubterm(outputListPos);
+                        String outputType = testOutput(outputListTerm.toString());
                         if (outputType != null) {
-                            String valToPrint = term.queryArgument(2).toString().substring(6, outputTermStr.lastIndexOf(", nil"));
+                            Term reducedOutputTerm = reduceTermToFinalForm(outputListTerm, reducer);
+                            String valToPrint = reducedOutputTerm.toString().substring(6, reducedOutputTerm.toString()
+                                    .lastIndexOf(", nil"));
                             switch (outputType) {
                                 case "I" -> {
                                     interpreter.writeInt(Integer.parseInt(valToPrint));
@@ -183,7 +203,7 @@ public class WhileCoraInterpreter {
                                 }
                             }
 
-                            term = term.replaceSubterm(term.queryPositions(false).get(3), CoraInputReader.readTerm("nil", trs));
+                            term = term.replaceSubterm(outputListPos, CoraInputReader.readTerm("nil", trs));
                         }
                     }
                 }

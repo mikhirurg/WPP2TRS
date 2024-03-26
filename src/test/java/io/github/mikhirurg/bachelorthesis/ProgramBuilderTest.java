@@ -2,6 +2,7 @@ package io.github.mikhirurg.bachelorthesis;
 
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp.WhileConst;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp.WhilePlus;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.arithmeticexp.WhileSub;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileFalseConst;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileLeq;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileOr;
@@ -362,6 +363,20 @@ class ProgramBuilderTest {
                         new WhileSkip()
                 ),
                 new WhileSkip()
+        ), statement);
+    }
+
+    @Test
+    void testPrintArithmeticExpression() {
+        String program = """
+                printInt(10-2)
+                """;
+        WhileStatement statement = ProgramBuilder.parseProgram(program);
+
+        assertEquals(new WhilePrintInt(
+                new WhileSub(
+                        new WhileConst("10"),
+                        new WhileConst("2"))
         ), statement);
     }
 
