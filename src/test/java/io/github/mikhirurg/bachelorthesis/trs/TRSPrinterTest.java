@@ -21,29 +21,21 @@ class TRSPrinterTest {
                     consB :: Bool -> list -> list
                     consS :: String -> list -> list
                                 
-                    appendI :: Int -> list -> list
-                    appendB :: Bool -> list -> list
-                    appendS :: String -> list -> list
+                    headI :: list -> Int
+                    headB :: list -> Bool
+                    headS :: list -> String
                                 
-                    takeI :: list -> Int
-                    takeB :: list -> Bool
-                    takeS :: list -> String
-                                
-                    moveI :: list -> list
-                    moveB :: list -> list
-                    moveS :: list -> list
+                    tailI :: list -> list
+                    tailB :: list -> list
+                    tailS :: list -> list
 
-                    appendI(i, l) -> consI(i, l)
-                    appendB(b, l) -> consB(b, l)
-                    appendS(str, l) -> consS(str, l)
+                    headI(consI(i, l)) -> i
+                    headB(consB(b, l)) -> b
+                    headS(consS(str, l)) -> str
 
-                    takeI(consI(i, l)) -> i
-                    takeB(consB(b, l)) -> b
-                    takeS(consS(str, l)) -> str
-
-                    moveI(consI(i, l)) -> l
-                    moveB(consB(b, l)) -> l
-                    moveS(consS(str, l)) -> l
+                    tailI(consI(i, l)) -> l
+                    tailB(consB(b, l)) -> l
+                    tailS(consS(str, l)) -> l
                                 
                     """;
 

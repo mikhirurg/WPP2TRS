@@ -83,9 +83,9 @@ public class WhileCoraInterpreter {
 
     private static String testInput(String input) {
         return switch (input) {
-            case "moveI(nil)" -> "I";
-            case "moveB(nil)" -> "B";
-            case "moveS(nil)" -> "S";
+            case "tailI(nil)" -> "I";
+            case "tailB(nil)" -> "B";
+            case "tailS(nil)" -> "S";
             default -> null;
         };
     }
@@ -165,16 +165,16 @@ public class WhileCoraInterpreter {
                             }
 
                             term = term.replaceSubterm(term.queryPositions(false).get(1),
-                                    CoraInputReader.readTerm("move" + inputType + "(cons" + inputType + "(" + interpreter.input + ", nil))", trs));
+                                    CoraInputReader.readTerm("tail" + inputType + "(cons" + inputType + "(" + interpreter.input + ", nil))", trs));
 
                             for (Position position : term.queryPositions(false)) {
-                                if (term.querySubterm(position).toString().equals("take" + inputType + "(nil)")) {
+                                if (term.querySubterm(position).toString().equals("head" + inputType + "(nil)")) {
                                     String value = interpreter.input.toString();
                                     if (inputType.equals("S")) {
                                         value = "\"" + value + "\"";
                                     }
                                     term = term.replaceSubterm(position,
-                                            CoraInputReader.readTerm("take" + inputType + "(cons" + inputType + "(" + value + ", nil))", trs));
+                                            CoraInputReader.readTerm("head" + inputType + "(cons" + inputType + "(" + value + ", nil))", trs));
                                     break;
                                 }
                             }
