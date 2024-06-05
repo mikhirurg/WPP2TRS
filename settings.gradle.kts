@@ -4,4 +4,6 @@
 
 rootProject.name = "BachelorThesis"
 
-include("cora")
+include("wpp2trs", "cora-app")
+
+project(":cora-app").projectDir = file("cora/app")
