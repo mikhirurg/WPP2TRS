@@ -1,0 +1,4 @@
+if false then
+    while false do
+        skip
+else skip

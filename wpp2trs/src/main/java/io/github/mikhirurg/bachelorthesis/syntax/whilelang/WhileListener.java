@@ -22,41 +22,161 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
+/**
+ * WhileListener is the ParseTreeListener used to process the While++ parse tree
+ * It allows to generate the class representation of the While++ program
+ */
 public class WhileListener extends WhileBaseListener {
+
+    /**
+     * Stack used for constructing arithmetic expressions
+     */
     private final Stack<WhileArithmeticExpression> arithmeticStack;
+
+    /**
+     * Stack used for constructing boolean expressions
+     */
     private final Stack<WhileBooleanExpression> booleanStack;
+
+    /**
+     * Stack used for constructing string expressions
+     */
     private final Stack<WhileStringExpression> stringsStack;
+
+    /**
+     * Stack used for constructing the program class representation from the representations of sub-statements
+     */
     private final Stack<WhileStatement> statementStack;
 
+    /**
+     * Map of currently active While++ variables
+     */
     private HashMap<String, WhileVar> variables;
+
+    /**
+     * Map of variables, used to clean the scope of declared variables
+     * (for example after leaving the body of <code>while</code> or <code>if</code>)
+     */
     private HashMap<String, WhileVar> tmpVariables;
 
+    /**
+     * Pattern for recognizing the variables in the parse tree
+     */
     private static final Pattern VAR_PATTERN = Pattern.compile("[a-zA-Z]+");
+
+    /**
+     * Pattern for recognizing the numbers in the parse tree
+     */
     private static final Pattern INT_PATTERN = Pattern.compile("[0-9]+");
+
+    /**
+     * Pattern for recognizing strings in the parse tree
+     */
     private static final Pattern STRING_PATTERN = Pattern.compile("\"(.*)\"");
 
+    /**
+     * Keyword for logical NOT
+     */
     private static final String NOT = "not";
+
+    /**
+     * Keyword for logical AND
+     */
     private static final String AND = "and";
+
+    /**
+     * Keyword for logical OR
+     */
     private static final String OR = "or";
+
+    /**
+     * Keyword for "equals" operator
+     */
     private static final String EQ = "=";
+
+    /**
+     * Keyword for "greater than" operator
+     */
     private static final String GT = ">";
+
+    /**
+     * Keyword for "less than" operator
+     */
     private static final String LT = "<";
+
+    /**
+     * Keyword for "greater than or equals to" operator
+     */
     private static final String GE = ">=";
+
+    /**
+     * Keyword for "less than or equals to" operator
+     */
     private static final String LE = "<=";
+
+    /**
+     * Keyword for statement composition operator
+     */
     private static final String SEMICOLON = ";";
+
+    /**
+     * Keyword for integer type (used in variable declaration)
+     */
     private static final String INT_TYPE = "int";
+
+    /**
+     * Keyword for boolean type (used in variable declaration)
+     */
     private static final String BOOL_TYPE = "bool";
+
+    /**
+     * Keyword for string type (used in variable declaration)
+     */
     private static final String STRING_TYPE = "string";
+
+    /**
+     * Keyword for addition operator (arithmetic expressions)
+     */
     private static final String PLUS = "+";
+
+    /**
+     * Keyword for subtraction operator (arithmetic expression)
+     */
     private static final String MINUS = "-";
+
+    /**
+     * Keyword for multiplication operator (arithmetic expression)
+     */
     private static final String MULT = "*";
+
+    /**
+     * Keyword for division operator (arithmetic expression)
+     */
     private static final String DIV = "/";
+
+    /**
+     * Keyword for modulo operator (arithmetic expression)
+     */
     private static final String MOD = "%";
+
+    /**
+     * Keyword for "true" boolean constant
+     */
     private static final String TRUE = "true";
+
+    /**
+     * Keyword for "false" boolean constant
+     */
     private static final String FALSE = "false";
 
+    /**
+     * While++ program class representation
+     */
     private WhileStatement program;
 
+    /**
+     * Default constructor for the WhileListener
+     */
     public WhileListener() {
         this.arithmeticStack = new Stack<>();
         this.booleanStack = new Stack<>();
@@ -66,6 +186,15 @@ public class WhileListener extends WhileBaseListener {
         this.stringsStack = new Stack<>();
     }
 
+    /**
+     * The method returns currently non-empty stacks:
+     * <ul>
+     *     <li> string expressions stack,
+     *     <li> boolean expressions stack,
+     *     <li> arithmetic expressions stack
+     * </ul>
+     * @return set of currently non-empty expressions stack
+     */
     private Set<WhileType> getNonEmptyStacks() {
         Set<WhileType> types = new HashSet<>();
         if (!stringsStack.isEmpty()) {
@@ -81,6 +210,10 @@ public class WhileListener extends WhileBaseListener {
         return types;
     }
 
+    /**
+     * The method that adds the variable to the correct expression stack based on the type of the variable
+     * @param var variable, which is added to any of the expression's stacks
+     */
     private void processVariable(WhileVar var) {
         if (var.getType() == WhileType.INT) {
             arithmeticStack.add((WhileIntVar) var);
@@ -91,10 +224,20 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method returns the build class representation of the program.
+     * To get the output program, it is required to perform the walk in AST using this listener, before calling this method.
+     * @return class representation of the program
+     */
     public WhileStatement getProgram() {
         return program;
     }
 
+    /**
+     * The method saves the variables currently existing in the environment
+     * before entering the body of the <code>if</code> statement
+     * @param ctx the parse tree
+     */
     @Override
     public void enterIfStm(WhileParser.IfStmContext ctx) {
         super.enterIfStm(ctx);
@@ -102,6 +245,11 @@ public class WhileListener extends WhileBaseListener {
         tmpVariables = new HashMap<>(variables);
     }
 
+    /**
+     * The method saves the variables currently declared in the environment
+     * before entering the body of the <code>while</code> statement
+     * @param ctx the parse tree
+     */
     @Override
     public void enterWhileStm(WhileParser.WhileStmContext ctx) {
         super.enterWhileStm(ctx);
@@ -109,6 +257,11 @@ public class WhileListener extends WhileBaseListener {
         tmpVariables = new HashMap<>(variables);
     }
 
+    /**
+     * The method takes the build program class representation from the program statement stack
+     * and assigns it to the <code>program</code> variable
+     * @param ctx the parse tree
+     */
     @Override
     public void exitProg(WhileParser.ProgContext ctx) {
         super.exitProg(ctx);
@@ -116,6 +269,14 @@ public class WhileListener extends WhileBaseListener {
         this.program = statementStack.pop();
     }
 
+    /**
+     * The method constructs the statement composition class representation
+     * by taking the first and second sub-statements representation from the statements stack,
+     * wrapping it with WhileComp class, and putting it back to the statements stack.
+     * @param ctx the parse tree
+     * @throws ExpectedStatementException if the parse tree missing the sub-statement
+     * (for example in case of statement composition: <code>S1;S2</code> and S2 is missing)
+     */
     @Override
     public void exitStm(WhileParser.StmContext ctx) {
         super.exitStm(ctx);
@@ -131,6 +292,12 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method constructs the variable assignment statement class representation
+     * and adds it to the statements stack.
+     * @param ctx the parse tree
+     * @throws VariableNotDeclaredException if the variable used in the assignment was not yet declared
+     */
     @Override
     public void exitAssignStm(WhileParser.AssignStmContext ctx) {
         super.exitAssignStm(ctx);
@@ -161,6 +328,16 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method constructs the variable declaration class representation and adds it to the statements stack.
+     * @param ctx the parse tree
+     *
+     * @throws DuplicateVariableDeclarationException
+     * if this variable was already declared before in the same area of visibility.
+     *
+     * @throws IncompatibleTypeException if the type of the expression assigned to the variable
+     * is incompatible with the variable type
+     */
     @Override
     public void exitDeclareStm(WhileParser.DeclareStmContext ctx) {
         super.exitDeclareStm(ctx);
@@ -208,6 +385,10 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method constructs the if statement class representation and adds it to the statements stack.
+     * @param ctx the parse tree
+     */
     @Override
     public void exitIfStm(WhileParser.IfStmContext ctx) {
         super.exitIfStm(ctx);
@@ -218,12 +399,24 @@ public class WhileListener extends WhileBaseListener {
         statementStack.add(new WhileIf(expression, s1, s2));
     }
 
+    /**
+     * The method clears the map of declared variables after leaving the if statement or the while loop
+     * from the variables which were declared in the body of the while or inside if.
+     * @param ctx the parse tree
+     */
     @Override
     public void exitNestedStm(WhileParser.NestedStmContext ctx) {
         super.exitNestedStm(ctx);
         variables = new HashMap<>(tmpVariables);
     }
 
+    /**
+     * The method creates the class representation of the boolean expression printing statement
+     * and adds it to the statements stack.
+     * @param ctx the parse tree
+     * @throws ExpectedTypeException if the expression of the wrong type is passed into the body of the print statement
+     * (not a boolean expression)
+     */
     @Override
     public void exitPrintBoolStm(WhileParser.PrintBoolStmContext ctx) {
         super.exitPrintBoolStm(ctx);
@@ -235,6 +428,13 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the arithmetic expression printing statement
+     * and adds it to the statements stack.
+     * @param ctx the parse tree
+     * @throws ExpectedTypeException if the expression of the wrong type is passed into the body of the print statement
+     * (not an arithmetic expression)
+     */
     @Override
     public void exitPrintIntStm(WhileParser.PrintIntStmContext ctx) {
         super.exitPrintIntStm(ctx);
@@ -246,6 +446,30 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the string expression printing statement
+     * and adds it to the statements stack
+     * @param ctx the parse tree
+     * @throws ExpectedTypeException if the expression of the wrong type is passed into the body of the print statement
+     * (not a string expression)
+     */
+    @Override
+    public void exitPrintStringStm(WhileParser.PrintStringStmContext ctx) {
+        super.exitPrintStringStm(ctx);
+
+        if (!stringsStack.isEmpty()) {
+            statementStack.add(new WhilePrintString(stringsStack.pop()));
+        } else {
+            throw new ExpectedTypeException(ctx, WhileType.STRING);
+        }
+    }
+
+    /**
+     * The method creates the class representation of reading statement for boolean variable
+     * and adds it to the statements stack.
+     * @param ctx the parse tree
+     * @throws ExpectedTypeException if the variable of the wrong type is used (not a boolean variable)
+     */
     @Override
     public void exitReadBoolStm(WhileParser.ReadBoolStmContext ctx) {
         super.exitReadBoolStm(ctx);
@@ -258,6 +482,12 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the reading statement for the integer variable
+     * and adds it to the statements stack.
+     * @param ctx the parse tree
+     * @throws ExpectedTypeException if the variable of the wrong type is used (not an integer variable)
+     */
     @Override
     public void exitReadIntStm(WhileParser.ReadIntStmContext ctx) {
         super.exitReadIntStm(ctx);
@@ -270,17 +500,12 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
-    @Override
-    public void exitPrintStringStm(WhileParser.PrintStringStmContext ctx) {
-        super.exitPrintStringStm(ctx);
-
-        if (!stringsStack.isEmpty()) {
-            statementStack.add(new WhilePrintString(stringsStack.pop()));
-        } else {
-            throw new ExpectedTypeException(ctx, WhileType.STRING);
-        }
-    }
-
+    /**
+     * The method creates the class representation of the reading statement for the string variable
+     * and adds it to the statements stack.
+     * @param ctx the parse tree
+     * @throws ExpectedTypeException if the variable of the wrong type is used (not a string variable)
+     */
     @Override
     public void exitReadStringStm(WhileParser.ReadStringStmContext ctx) {
         super.exitReadStringStm(ctx);
@@ -293,6 +518,10 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the "skip" statement and adds it to the statements stack.
+     * @param ctx the parse tree
+     */
     @Override
     public void exitSkipStm(WhileParser.SkipStmContext ctx) {
         super.exitSkipStm(ctx);
@@ -300,6 +529,10 @@ public class WhileListener extends WhileBaseListener {
         statementStack.add(new WhileSkip());
     }
 
+    /**
+     * The method creates the class representation of the "while" statement and adds it to the statements stack.
+     * @param ctx the parse tree
+     */
     @Override
     public void exitWhileStm(WhileParser.WhileStmContext ctx) {
         super.exitWhileStm(ctx);
@@ -310,6 +543,11 @@ public class WhileListener extends WhileBaseListener {
         statementStack.add(new WhileWhile(expression, statement));
     }
 
+    /**
+     * The method processes the variable used in assignment/declaration statement
+     * and adds it to the correct expression stack
+     * @param ctx the parse tree
+     */
     @Override
     public void exitUntypedexpr(WhileParser.UntypedexprContext ctx) {
         super.exitUntypedexpr(ctx);
@@ -320,6 +558,18 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the binary arithmetic operation:
+     * <ul>
+     *     <li> multiplication
+     *     <li> division
+     *     <li> modulo operation
+     *     <li> addition
+     *     <li> subtraction
+     * </ul>
+     * And it adds this class representation to the arithmetic expressions stack
+     * @param ctx the parse tree
+     */
     @Override
     public void exitAexp(WhileParser.AexpContext ctx) {
         super.exitAexp(ctx);
@@ -346,6 +596,12 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the integers and the integer variables
+     * and adds it to the arithmetic expressions stack.
+     * @param ctx the parse tree
+     * @throws VariableNotDeclaredException if the encountered variable was not yet declared in the program
+     */
     @Override
     public void exitAexpatom(WhileParser.AexpatomContext ctx) {
         super.exitAexpatom(ctx);
@@ -369,6 +625,12 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the boolean constants (true/false) and boolean variables
+     * and adds it to the boolean expressions stack.
+     * @param ctx the parse tree
+     * @throws VariableNotDeclaredException if the encountered variable was not yet declared in the program
+     */
     @Override
     public void exitBexpatom(WhileParser.BexpatomContext ctx) {
         super.exitBexpatom(ctx);
@@ -390,6 +652,11 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the operators with the resulting boolean type
+     * and adds it to the boolean expressions stack.
+     * @param ctx the parse tree
+     */
     @Override
     public void exitBexp(WhileParser.BexpContext ctx) {
         super.exitBexp(ctx);
@@ -445,6 +712,12 @@ public class WhileListener extends WhileBaseListener {
         }
     }
 
+    /**
+     * The method creates the class representation of the string expressions (string constants and string variables)
+     * and adds it to the string expressions stack.
+     * @param ctx the parse tree
+     * @throws VariableNotDeclaredException if the encountered variable was not yet declared in the program
+     */
     @Override
     public void exitStrexpr(WhileParser.StrexprContext ctx) {
         super.exitStrexpr(ctx);

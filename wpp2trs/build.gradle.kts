@@ -43,7 +43,7 @@ tasks.test {
 
 group = "io.github.mikhirurg"
 version = "1.0-SNAPSHOT"
-description = "BachelorThesis"
+description = "wpp2trs"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 tasks {
