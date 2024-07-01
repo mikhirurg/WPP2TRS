@@ -12,20 +12,20 @@ import java.util.Map;
 public interface WhileArithmeticExpression extends WhileExpression {
 
     /**
-     * The method returns the text representation of the arithmetic expression
+     * The method returns the text representation of the arithmetic expression.
      * @return the text representation of the arithmetic expression
      */
     String toString();
 
     /**
-     * The method evaluates the arithmetic expression using the map from variables to integer values
+     * The method evaluates the arithmetic expression using the map from variables to integer values.
      * @param map mapping from variables to values
-     * @return evaluated value of the expression
+     * @return evaluated value of the arithmetic expression
      */
     Integer evaluate(Map<WhileVar, Object> map);
 
     /**
-     * Returns the type WhileType.INT - the type of the arithmetic expression
+     * Returns the type WhileType.INT - the type of the arithmetic expression.
      * @return type of the arithmetic expressions - WhileType.INT
      */
     default WhileType getType() {

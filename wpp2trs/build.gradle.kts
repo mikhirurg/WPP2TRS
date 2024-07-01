@@ -68,6 +68,10 @@ tasks.withType<JavaCompile>() {
     options.compilerArgs.add("--enable-preview")
 }
 
+tasks.withType<Test>().all {
+    jvmArgs("--enable-preview")
+}
+
 tasks.withType<Javadoc>() {
     options.encoding = "UTF-8"
 }

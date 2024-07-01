@@ -10,7 +10,7 @@ import java.util.Map;
 public class WhileConst implements WhileArithmeticExpression {
 
     /**
-     * The number value of the constant
+     * The number value of the constant.
      */
     private final WhileNumber number;
 

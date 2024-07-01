@@ -5,17 +5,17 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
 import java.util.Map;
 
 /**
- * WhileDiv is a class that represents the While++ division arithmetic operation
+ * WhileDiv is a class that represents the While++ division arithmetic operation.
  */
 public class WhileDiv implements WhileArithmeticExpression {
 
     /**
-     * The left operand of the division operator
+     * The left operand of the division operator.
      */
     private final WhileArithmeticExpression left;
 
     /**
-     * The right operand of the division operator
+     * The right operand of the division operator.
      */
     private final WhileArithmeticExpression right;
 
@@ -46,17 +46,17 @@ public class WhileDiv implements WhileArithmeticExpression {
     }
 
     /**
-     * The method returns the string representation of the division operation expression.
-     * @return the string representation of the division expression
+     * The method returns the text representation of the division operation expression.
+     * @return the text representation of the division expression
      */
     public String toString() {
         return "(" + left.toString() + " / " + right.toString() + ")";
     }
 
     /**
-     * The method evaluates the division using the mapping from variables to values
+     * The method evaluates the integer division using the mapping from variables to values.
      * @param map mapping from variables to values
-     * @return the result of division operation with substitution <code>map</code>
+     * @return the result of integer division operation using substitution <code>map</code>
      */
     @Override
     public Integer evaluate(Map<WhileVar, Object> map) {
