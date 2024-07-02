@@ -476,7 +476,7 @@ public class WhileListener extends WhileBaseListener {
 
         String varName = ctx.children.get(2).getText();
         if (variables.containsKey(varName)) {
-            statementStack.add(new WhileReadBool(variables.get(varName)));
+            statementStack.add(new WhileReadBool((WhileBoolVar) variables.get(varName)));
         } else {
             throw new ExpectedTypeException(ctx, WhileType.BOOL);
         }
@@ -494,7 +494,7 @@ public class WhileListener extends WhileBaseListener {
 
         String varName = ctx.children.get(2).getText();
         if (variables.containsKey(varName)) {
-            statementStack.add(new WhileReadInt(variables.get(varName)));
+            statementStack.add(new WhileReadInt((WhileIntVar) variables.get(varName)));
         } else {
             throw new ExpectedTypeException(ctx, WhileType.INT);
         }
@@ -512,7 +512,7 @@ public class WhileListener extends WhileBaseListener {
 
         String varName = ctx.children.get(2).getText();
         if (variables.containsKey(varName)) {
-            statementStack.add(new WhileReadString(variables.get(varName)));
+            statementStack.add(new WhileReadString((WhileStringVar) variables.get(varName)));
         } else {
             throw new ExpectedTypeException(ctx, WhileType.STRING);
         }

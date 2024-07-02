@@ -23,23 +23,37 @@ public class WhileNot implements WhileBooleanExpression {
     }
 
     /**
-     * The method returns the
-     * @return
+     * The method returns the operand of the logical negation operation.
+     * @return the operand of the logical negation operation
      */
     public WhileBooleanExpression getExpression() {
         return expression;
     }
 
+    /**
+     * The method returns the text representation of the logical negation operation.
+     * @return the text representation of the logical negation operation
+     */
     @Override
     public String toString() {
         return "not(" + expression.toString() + ")";
     }
 
+    /**
+     * The method evaluates the logical negation using the mapping from variables to values.
+     * @param map mapping from variables to values
+     * @return the result of the evaluation of the logical negation operation
+     */
     @Override
     public Boolean evaluate(Map<WhileVar, Object> map) {
         return !expression.evaluate(map);
     }
 
+    /**
+     * The method verifies whether another object represents the same While++ negation operation expression.
+     * @param other another object
+     * @return boolean, which describes whether another object is equal to the current logical negation operation expression
+     */
     @Override
     public boolean equals(Object other) {
         if (this == other) {

@@ -19,7 +19,7 @@ public class WhileFalseConst implements WhileBooleanExpression{
     }
 
     /**
-     * The method evaluates the "false" boolean constant, by basically returning the boolean value - false.
+     * The method evaluates the "false" boolean constant, by returning the boolean value - false.
      * @param map mapping from variables to values
      * @return the boolean "false" value
      */
@@ -31,7 +31,7 @@ public class WhileFalseConst implements WhileBooleanExpression{
     /**
      * The method verifies whether another object represents the same While++ "false" boolean constant.
      * @param other another object
-     * @return boolean, which describes whether another object is equal to the current false boolean constant
+     * @return boolean, which describes whether another object is equal to the current "false" boolean constant
      */
     @Override
     public boolean equals(Object other) {
