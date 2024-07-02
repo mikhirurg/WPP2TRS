@@ -38,13 +38,13 @@ After that user can specify the run option to process the input While++ source f
         <td> --printlctrs </td> <td> Prints the LCTRS generated for the input While++ program </td>
     </tr>
     <tr>
-        <td> --exec </td> <td> Executes the LCTRS generated for the input While++ program using <b> Cora </b> rewriting engine </td>
+        <td> --exec </td> <td> Executes the LCTRS generated for the input While++ program using <a href="https://github.com/hezzel/cora">Cora</a> rewriting engine </td>
     </tr>
     <tr>
         <td> --explicit </td> <td> Shows every reduction step in the LCTRS during the LCTRS execution </td>
     </tr>
     <tr>
-        <td> --provetermination </td> <td> Attempts to prove the termination of the input While++ program using <b> Cora </b> constrained rewriting analyzer library </td>
+        <td> --provetermination </td> <td> Attempts to prove the termination of the input While++ program using <a href="https://github.com/hezzel/cora">Cora</a>) constrained rewriting analyzer library </td>
     </tr>
 </table>
 
