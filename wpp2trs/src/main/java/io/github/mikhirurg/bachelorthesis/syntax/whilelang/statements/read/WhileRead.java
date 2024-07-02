@@ -5,7 +5,7 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileVar;
 import io.github.mikhirurg.bachelorthesis.trs.TRSPrinter;
 
 /**
- * WhileRead is an abstract class for all While++ reading statements
+ * WhileRead is an abstract class for all While++ reading statements for different types.
  */
 public abstract class WhileRead implements WhileStatement {
 

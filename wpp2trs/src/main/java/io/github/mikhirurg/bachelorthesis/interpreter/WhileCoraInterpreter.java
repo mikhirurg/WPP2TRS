@@ -21,16 +21,43 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * WhileCoraInterpreter is a class for the WPP2TRS console application.
+ * Currently, it supports:
+ * <ul>
+ *     <li> While++ program translation into the LCTRS,
+ *     <li> Executing the translated LCTRS using the cora rewriting engine,
+ *     <li> Proving the program termination using the cora constrained rewriting analyser
+ * </ul>
+ *
+ */
 public class WhileCoraInterpreter {
 
+    /**
+     * The object that represents the current element that was read from the input stream
+     */
     private Object input;
 
+    /**
+     * The buffered reader that represents the standard input for the interpreter
+     */
     private final BufferedReader reader;
 
+    /**
+     * The buffered writer that represents the standard output of the interpreter
+     */
     private final BufferedWriter writer;
 
+    /**
+     * The current token used in the stream tokenizer.
+     */
     private final StreamTokenizer tok;
 
+    /**
+     * WhileCoraInterpreter constructor.
+     * @param inputStream the input stream for the interpreter
+     * @param outputStream the output stream for the interpreter
+     */
     public WhileCoraInterpreter(InputStream inputStream, OutputStream outputStream) {
         this.input = null;
         this.reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -38,6 +65,11 @@ public class WhileCoraInterpreter {
         this.tok = new StreamTokenizer(reader);
     }
 
+    /**
+     * The method attempts to read the integer value from the standard input stream.
+     * @throws IOException if there is a problem with the input stream
+     * @throws WhileCoraInterpreterTypeException if there is a non-integer value in the input stream
+     */
     public void readInt() throws IOException {
         if (tok.nextToken() == StreamTokenizer.TT_NUMBER) {
             input = (int) tok.nval;
@@ -46,12 +78,20 @@ public class WhileCoraInterpreter {
         }
     }
 
+    /**
+     * The method attempts to read the string value from the standard input stream.
+     * @throws IOException if there is a problem with the input stream
+     */
     public void readString() throws IOException {
         tok.nextToken();
         input = tok.sval;
     }
 
-
+    /**
+     * The method attempts to read the boolean value form the standard input stream.
+     * @throws IOException if there is a problem with the input stream
+     * @throws WhileCoraInterpreterTypeException if there is a non-boolean value in the input stream
+     */
     public void readBool() throws IOException {
         if (tok.nextToken() == StreamTokenizer.TT_WORD) {
             if ("true".equals(tok.sval)) {
@@ -64,25 +104,50 @@ public class WhileCoraInterpreter {
         }
     }
 
+    /**
+     * The method attempts to write the integer value to the standard output stream
+     * @param intVal the value that is written to the output stream
+     * @throws IOException if there is a problem with the output stream
+     */
     public void writeInt(int intVal) throws IOException {
         writer.write(String.valueOf(intVal));
         writer.flush();
     }
 
+    /**
+     * The method attempts to write the boolean value to the standard output stream
+     * @param boolVal the value that is written to the output stream
+     * @throws IOException if there is a problem with the output stream
+     */
     public void writeBool(boolean boolVal) throws IOException {
         writer.write(String.valueOf(boolVal));
         writer.flush();
     }
 
+    /**
+     * The method attempts to write the string value to the standard output stream
+     * @param strVal the string value that is written to the output stream
+     * @throws IOException if there is a problem with the output stream
+     */
     public void writeString(String strVal) throws IOException {
         writer.write(String.valueOf(strVal));
         writer.flush();
     }
 
+    /**
+     * The method that creates the cora representation of the LCTRS from the string
+     * @param trsString the input string representing the LCTRS
+     * @return the cora class representation of the LCTRS
+     */
     private static TRS fromString(String trsString) {
         return CoraInputReader.readTrsFromString(trsString, TrsFactory.LCTRS);
     }
 
+    /**
+     * The method checks what type of element are we trying to read from the standard input
+     * @param input the LCTRS term representing the operation on the input stream
+     * @return the letter representing the type of the element we're trying to read ("I" - integer, "B" - boolean, "S" - string)
+     */
     private static String testInput(String input) {
         return switch (input) {
             case "tailI(nil)" -> "I";
@@ -92,6 +157,11 @@ public class WhileCoraInterpreter {
         };
     }
 
+    /**
+     * The method checks what type of the element are we trying to write to the standard output
+     * @param output the LCTRS term representing the operation on the output stream
+     * @return the letter representing the type of the element we're trying to write ("I" - integer, "B" - boolean, "S" - string)
+     */
     private static String testOutput(String output) {
         if (output.matches("consI.*")) {
             return "I";
@@ -103,6 +173,12 @@ public class WhileCoraInterpreter {
         return null;
     }
 
+    /**
+     * The method performs the reduction of the given term to the normal form using the reducer
+     * @param term the term we're reducing to the normal form
+     * @param reducer the reducer that is used to reduce the term to the normal form
+     * @return the normal form to which the term <code>term</code> was reduced using the reducer <code>reducer</code>
+     */
     private static Term reduceTermToFinalForm(Term term, Reducer reducer) {
         Term oldTerm;
         do {
@@ -113,6 +189,12 @@ public class WhileCoraInterpreter {
         return oldTerm;
     }
 
+    /**
+     * The method finds the position of the <code>argNum</code>-th argument in the term <code>term</code>.
+     * @param term the term where we try to find the position of the argument
+     * @param argNum the order of the argument in the term for which we want to find the position
+     * @return the position of the argument in the LCTRS term
+     */
     private static Position findArgumentPos(Term term, int argNum) {
         return term.queryPositions(false)
                 .stream()
@@ -120,6 +202,19 @@ public class WhileCoraInterpreter {
                 .findAny().orElse(null);
     }
 
+    /**
+     * The main method of the WPP2TRS application.
+     * Takes the path to the While++ program as the first argument.
+     * Additional parameters description:
+     * <ul>
+     *     <li> "--printlctrs" - prints the LCTRS generated for the input While++ program,
+     *     <li> "--exec" - executes the LCTRS generated for the input While++ program,
+     *     <li> "--explicit" - shows every reduction step in the LCTRS,
+     *     <li> "--provetermination" - attempts to prove the termination of the input While++ program
+     * </ul>
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
 
         if (args.length == 0) {
