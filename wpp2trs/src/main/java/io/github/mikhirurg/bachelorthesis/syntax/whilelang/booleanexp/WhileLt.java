@@ -53,7 +53,7 @@ public class WhileLt implements WhileBooleanExpression {
      */
     @Override
     public Boolean evaluate(Map<WhileVar, Object> map) {
-        return left.evaluate(map) > right.evaluate(map);
+        return left.evaluate(map) < right.evaluate(map);
     }
 
     /**

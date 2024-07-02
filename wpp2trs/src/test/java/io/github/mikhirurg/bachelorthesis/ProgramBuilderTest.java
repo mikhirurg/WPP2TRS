@@ -7,13 +7,13 @@ import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileFalse
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileLeq;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileOr;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.booleanexp.WhileTrueConst;
+import io.github.mikhirurg.bachelorthesis.syntax.whilelang.exceptions.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.*;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.statements.print.WhilePrintInt;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.stringexpr.WhileString;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileBoolVar;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileIntVar;
 import io.github.mikhirurg.bachelorthesis.syntax.whilelang.variable.WhileStringVar;
-import io.github.mikhirurg.bachelorthesis.syntax.whilelang.exceptions.VariableNotDeclaredException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,36 +61,42 @@ class ProgramBuilderTest {
     void testIntVarAssignmentNotDeclared() {
         String program = "x := 1";
 
-        try {
-            ProgramBuilder.parseProgram(program);
-            fail();
-        } catch (VariableNotDeclaredException e) {
-            // do nothing
-        }
+        assertThrows(VariableNotDeclaredException.class, () -> ProgramBuilder.parseProgram(program));
     }
 
     @Test
     void testStringVarAssignmentNotDeclared() {
         String program = "x := \"str\"";
 
-        try {
-            ProgramBuilder.parseProgram(program);
-            fail();
-        } catch (VariableNotDeclaredException e) {
-            // do nothing
-        }
+        assertThrows(VariableNotDeclaredException.class, () -> ProgramBuilder.parseProgram(program));
     }
 
     @Test
     void testBoolVarAssignmentNotDeclared() {
         String program = "x := false";
 
-        try {
-            ProgramBuilder.parseProgram(program);
-            fail();
-        } catch (VariableNotDeclaredException e) {
-            // do nothing
-        }
+        assertThrows(VariableNotDeclaredException.class, () -> ProgramBuilder.parseProgram(program));
+    }
+
+    @Test
+    void testDuplicateVariableDeclaration() {
+        String program = "int x := 1; int x := 2";
+
+        assertThrows(DuplicateVariableDeclarationException.class, () -> ProgramBuilder.parseProgram(program));
+    }
+
+    @Test
+    void testExpectedStatement() {
+        String program = "int x := 1;";
+
+        assertThrows(ExpectedStatementException.class, () -> ProgramBuilder.parseProgram(program));
+    }
+
+    @Test
+    void testIncompatibleType() {
+        String program = "int x := 1; printString(x)";
+
+        assertThrows(IncompatibleTypeException.class, () -> ProgramBuilder.parseProgram(program));
     }
 
     @Test
