@@ -30,7 +30,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(22))
     }
 }
 
@@ -44,7 +44,7 @@ tasks.test {
 group = "io.github.mikhirurg"
 version = "1.0-SNAPSHOT"
 description = "wpp2trs"
-java.sourceCompatibility = JavaVersion.VERSION_21
+java.sourceCompatibility = JavaVersion.VERSION_22
 
 tasks {
     val fatJar = register<Jar>("fatJar") {

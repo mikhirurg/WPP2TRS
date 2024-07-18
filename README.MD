@@ -4,11 +4,11 @@
 
 WPP2TRS is the Java implementation of the translation process that allows converting While++ programs into the [Logically Constrained Term Rewriting Systems](https://www.cs.ru.nl/~cynthiakop/frocos13.pdf).
 
-The project is developed as a practical part of the Bachelor's thesis in Computing Science at Radboud University Nijmegen.
+The project is developed as a practical part of the Bachelor's [thesis](/thesis/thesis.pdf) in Computing Science at Radboud University Nijmegen.
 
 ## Installation guide
 
-The project requires Java version 21 with preview features enabled.
+The project requires Java version 22 with preview features enabled.
 
 There are a few different ways how a user can obtain the jar file to execute the project:
 - The latest stable version of the project is available in the [Releases](https://github.com/mikhirurg/WPP2TRS/releases) section of the repository
@@ -209,4 +209,61 @@ java --enable-preview -jar wpp2trs-1.0-SNAPSHOT-standalone.jar program.wpp --exe
 ⇒ stm_3(nil, nil, 10)
 ⇒ stm_6(nil, nil, 10)
 ⇒ nil
+```
+
+### Attempting to prove the termination of the While++ program using Cora
+
+#### Input program "program.wpp":
+```
+int x := 1;
+printInt(x)
+```
+
+#### Command:
+```
+java --enable-preview -jar wpp2trs-1.0-SNAPSHOT-standalone.jar program.wpp --provetermination
+```
+
+#### WPP2TRS output:
+```
+Termination answer: YES
+We consider the LCTRS with only rule scheme Calc:
+
+  Signature: consB :: Bool → list → list
+             consI :: Int → list → list
+             consS :: String → list → list
+             headB :: list → Bool
+             headI :: list → Int
+             headS :: list → String
+             nil   :: list
+             stm_1 :: list → list → list
+             stm_2 :: list → list → Int → list
+             stm_3 :: list → list → Int → list
+             stm_4 :: list → list → Int → list
+             tailB :: list → list
+             tailI :: list → list
+             tailS :: list → list
+
+  Rules: headI(consI(i, l)) → i
+         headB(consB(b, l)) → b
+         headS(consS(str, l)) → str
+         tailI(consI(i, l)) → l
+         tailB(consB(b, l)) → l
+         tailS(consS(str, l)) → l
+         stm_1(in, out) → stm_2(in, out, 1)
+         stm_2(in, out, x) → stm_3(in, out, x)
+         stm_3(in, out, x) → stm_4(in, consI(x, out), x)
+         stm_4(in, out, x) → out
+
+The system is accessible function passing by a sort ordering with list ≻ Bool ≻ Int = String.
+
+We start by computing the following initial DP problem:
+
+  P1. (1) stm_1#(in, out) ➡ stm_2#(in, out, 1)
+      (2) stm_2#(in, out, x) ➡ stm_3#(in, out, x)
+      (3) stm_3#(in, out, x) ➡ stm_4#(in, consI(x, out), x)
+
+***** We apply the Graph Processor on P1.
+
+As there are no SCCs, this DP problem is removed.
 ```

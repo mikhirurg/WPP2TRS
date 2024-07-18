@@ -9,7 +9,6 @@ import cora.io.DefaultOutputModule;
 import cora.io.OutputModule;
 import cora.io.ProofObject;
 import cora.reduction.Reducer;
-import cora.termination.TerminationAnswer;
 import cora.termination.TerminationHandler;
 import io.github.mikhirurg.bachelorthesis.ProgramBuilder;
 import io.github.mikhirurg.bachelorthesis.interpreter.exception.WhileCoraInterpreterTypeException;
@@ -254,7 +253,7 @@ public class WhileCoraInterpreter {
                 ProofObject proofObject = TerminationHandler.proveTermination(trs);
                 OutputModule outputModule = DefaultOutputModule.createDefaultModule();
                 proofObject.justify(outputModule);
-                interpreter.writeString(STR."Termination answer: \{((TerminationAnswer) proofObject.queryAnswer()).name()}\n");
+                interpreter.writeString(STR."Termination answer: \{proofObject.queryAnswer().name()}\n");
                 interpreter.writeString(STR."\{outputModule}\n");
             }
 
