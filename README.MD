@@ -4,7 +4,7 @@
 
 WPP2TRS is the Java implementation of the translation process that allows converting While++ programs into the [Logically Constrained Term Rewriting Systems](https://www.cs.ru.nl/~cynthiakop/frocos13.pdf).
 
-The project is developed as a practical part of the Bachelor's [thesis](/thesis/thesis.pdf) in Computing Science at Radboud University Nijmegen.
+The project is developed as a practical part of the Bachelor's [thesis](https://www.cs.ru.nl/bachelors-theses/2024/Mikhail_Ushakov___1080976___Compiling_While++_into_Logically_Constrained_Term_Rewriting_Systems.pdf) in Computing Science at Radboud University Nijmegen.
 
 ## Installation guide
 
